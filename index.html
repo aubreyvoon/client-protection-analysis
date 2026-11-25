@@ -7,9 +7,9 @@
 <meta name="robots" content="noindex">
 <title>Client Protection Analysis</title>
 <style>
-:root{--bg:#f5f1ea;--fg:#1a2233;--card:#fffefb;--mut:#6a7385;--line:#ddd5c4;--acc:#14284b;--gold:#a67c2e;--in:#fcf7e6;--inf:#173a7a;--ok:#2b7a4b;--okb:#e2f1e7;--gap:#b4472b;--gapb:#fbe7e0;--nav:#14284b;--navf:#fff;--serif:Georgia,"Iowan Old Style","Palatino Linotype",serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1320;--fg:#e8ebf2;--card:#161d2d;--mut:#9aa4b8;--line:#2a3550;--acc:#a9c1ee;--gold:#d6b062;--in:#202a40;--inf:#b4cbff;--ok:#7fd1a0;--okb:#1d3a2b;--gap:#ff9f86;--gapb:#4a2a22;--nav:#1b2b50}}
-:root[data-theme="dark"]{--bg:#0e1320;--fg:#e8ebf2;--card:#161d2d;--mut:#9aa4b8;--line:#2a3550;--acc:#a9c1ee;--gold:#d6b062;--in:#202a40;--inf:#b4cbff;--ok:#7fd1a0;--okb:#1d3a2b;--gap:#ff9f86;--gapb:#4a2a22;--nav:#1b2b50}
+:root{--bg:#f5f1ea;--fg:#1a2233;--card:#fffefb;--mut:#6a7385;--line:#ddd5c4;--acc:#14284b;--gold:#a67c2e;--in:#fcf7e6;--inf:#173a7a;--ok:#2b7a4b;--okb:#e2f1e7;--gap:#b4472b;--gapb:#fbe7e0;--nav:#14284b;--navf:#fff;--hl:#f6ebc9;--hlb:#e8d79f;--serif:Georgia,"Iowan Old Style","Palatino Linotype",serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1320;--fg:#e8ebf2;--card:#161d2d;--mut:#9aa4b8;--line:#2a3550;--acc:#a9c1ee;--gold:#d6b062;--in:#202a40;--inf:#b4cbff;--ok:#7fd1a0;--okb:#1d3a2b;--gap:#ff9f86;--gapb:#4a2a22;--nav:#1b2b50;--hl:#3a3322;--hlb:#6b5a2e}}
+:root[data-theme="dark"]{--bg:#0e1320;--fg:#e8ebf2;--card:#161d2d;--mut:#9aa4b8;--line:#2a3550;--acc:#a9c1ee;--gold:#d6b062;--in:#202a40;--inf:#b4cbff;--ok:#7fd1a0;--okb:#1d3a2b;--gap:#ff9f86;--gapb:#4a2a22;--nav:#1b2b50;--hl:#3a3322;--hlb:#6b5a2e}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
@@ -24,13 +24,14 @@ main{max-width:920px;margin:0 auto;padding:14px 14px 40px}
 .chk{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--mut)}
 .chk input{width:auto}
 .tip{font-size:12px;color:var(--mut);margin:0 0 12px}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:0 0 14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:0 0 14px}
 .tile{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:10px;padding:9px 10px}
 .tile small{display:block;color:var(--mut);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
-.tile{text-align:center}
-.tile b{font:600 15px var(--serif)}
+.tile{text-align:center;padding:11px 10px}
+.tile b{display:block;font:600 18px var(--serif);margin:3px 0 1px}
 .tile b.gap{color:var(--gap)}
 .tile b.ok{color:var(--ok)}
+.tile .yr{display:block;font-size:13px;color:var(--fg)}
 details.card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 14px;overflow:hidden}
 summary{cursor:pointer;list-style:none;padding:13px 16px;font:600 17px var(--serif);color:var(--acc);display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}
 summary::-webkit-details-marker{display:none}
@@ -48,12 +49,17 @@ td{border-bottom:1px solid var(--line);padding:5px 4px;font-size:14px;vertical-a
 td input,td select{padding:6px;text-align:center;text-align-last:center}
 th:not(:first-child),td:not(:first-child){text-align:center}
 tr.sub td{background:var(--bg);font:600 12px var(--serif);color:var(--gold);letter-spacing:.05em;text-transform:uppercase}
-tr.tot td{font-weight:700}
+tr.tot td{font-weight:700;background:var(--hl);color:var(--acc)}
+tr.tot td:first-child{border-left:4px solid var(--gold)}
+.r.t{background:var(--hl);border-left:4px solid var(--gold);border-bottom:0;border-radius:6px;padding:8px 12px;margin:6px 0}
+.f.t{background:var(--hl);border-left:4px solid var(--gold);border-radius:8px;padding:6px 10px}
+.f>b.o{display:block;padding:8px 0;font:600 16px -apple-system,Arial,sans-serif;color:var(--fg);text-align:left}
 .r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
 .r.b{font-weight:700}
 .r.sm{padding:4px 0 4px 14px;font-size:13px;color:var(--mut)}
 .ri input{width:140px}
 input[data-m]{text-align:center}
+.g input[data-m]{text-align:left}
 .r>b:not(.ok):not(.gap){min-width:140px;text-align:center}
 small{color:var(--mut)}
 .o{font-weight:600;white-space:nowrap}
@@ -84,19 +90,36 @@ small{color:var(--mut)}
 .key b.ok{color:var(--ok)}
 .by{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:14px;padding:14px 16px;margin:0 0 14px}
 .pb{font:italic 14px var(--serif);color:var(--gold);margin-bottom:6px}
+.by .g{grid-template-columns:repeat(3,1fr)}
+.f.wide{grid-column:span 2}
+@media (max-width:600px){.by .g{grid-template-columns:1fr}.f.wide{grid-column:auto}}
+.pv{display:none}
 .disc{font-size:11px;color:var(--mut);margin:10px 0 0}
 button{font:600 14px -apple-system,Arial,sans-serif;padding:9px 15px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
 button.p{background:var(--nav);color:#fff;border-color:var(--nav)}
 textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:8px;display:none}
 @media print{
  @page{size:A4;margin:12mm}
- :root:root:root{--bg:#fff;--card:#fff;--fg:#1a2233;--mut:#555d6e;--line:#cfc8b8;--acc:#14284b;--gold:#8c6a22;--in:#fff;--inf:#1a2233;--ok:#2b7a4b;--okb:#e2f1e7;--gap:#b4472b;--gapb:#fbe7e0;--nav:#14284b}
+ :root:root:root{--bg:#fff;--card:#fff;--fg:#1a2233;--mut:#555d6e;--line:#cfc8b8;--acc:#14284b;--gold:#8c6a22;--in:#fff;--inf:#1a2233;--ok:#2b7a4b;--okb:#e2f1e7;--gap:#b4472b;--gapb:#fbe7e0;--nav:#14284b;--hl:#f6ebc9;--hlb:#e8d79f}
  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
  body{background:#fff;font-size:11px}
  main{padding:0;max-width:none}
  .noprint{display:none!important}
  body.hn .nric{display:none}
- details.card,.ec,.by{break-inside:avoid}
+ .ec,.by{break-inside:avoid}
+ #sC,#sD,#sF,#sG,#sH{break-before:page}
+ h3.c2,h3.lf{break-before:page}
+ .tiles{grid-template-columns:repeat(3,1fr)}
+ td{padding:3px 4px}
+ .r{padding:4px 0}
+ .r.t{padding:5px 10px;margin:4px 0}
+ .g{grid-template-columns:repeat(4,1fr);gap:6px 10px}
+ h3{margin:10px 0 6px;break-after:avoid}
+ .ll{max-height:64mm}
+ .pv{display:block;white-space:normal;overflow-wrap:anywhere;font:inherit;color:var(--fg);min-height:1.2em}
+ .pv+input,.pv+select{display:none!important}
+ .ch .pv,.pv.nw{white-space:nowrap}
+ .pv.pnv{font:600 28px var(--serif);color:#fff;border-bottom:1px solid rgba(255,255,255,.35);padding:2px 0 6px}
  input,select{border:0!important;background:transparent!important;-webkit-appearance:none;appearance:none;padding:0!important;color:var(--fg)}
  input::placeholder{color:transparent}
  input[type=number]::-webkit-inner-spin-button{display:none}
@@ -170,13 +193,14 @@ const sel=(k,o)=>`<select data-k="${k}">${o.map(v=>`<option>${v}</option>`).join
 const yn=k=>sel(k,['','Y','N']);
 const out=(id,f='m')=>`<b class="o" data-o="${id}" data-f="${f}"></b>`;
 const fld=(l,c,x='')=>`<label class="f ${x}"><span>${l}</span>${c}</label>`;
+const fv=(l,c,x='')=>`<div class="f ${x}"><span>${l}</span>${c}</div>`;
 const rw=(l,id,f='m',b='')=>`<div class="r ${b}"><span>${l}</span>${out(id,f)}</div>`;
 const ri=(l,k)=>`<div class="r"><span>${l}</span><span class="ri">${inp(k,'number','placeholder="RM"')}</span></div>`;
 const ch=(k,o)=>`<span class="ch">${sel(k,['',o,'Key in amount'])}<input class="hid" data-k="${k}_v" data-show="${k}" type="text" data-m="1" inputmode="decimal" autocomplete="off" placeholder="RM"></span>`;
-const sec=(no,t,h,o=1)=>`<details class="card" ${o?'open':''}><summary><span class="no">${no}</span>${t}</summary><div class="in">${h}</div></details>`;
+const sec=(no,t,h,o=1)=>`<details class="card" id="s${no}" ${o?'open':''}><summary><span class="no">${no}</span>${t}</summary><div class="in">${h}</div></details>`;
 
 // A
-let h=sec('A','Client profile',`<div class="g">${fld('NRIC no.',inp('nric','text','inputmode="numeric" placeholder="e.g. 880214-13-5678"'),'nric')}${fld('Occupation',inp('occ'))}${fld('Marital status',sel('mar',['','Single','Married','Divorced','Widowed']))}${fld('Has financial dependants?',yn('dep'))}${fld('Monthly gross income (RM)',inp('inc','number'))}${fld('Annual bonus / other income (RM)',inp('bonus','number'))}</div>${rw('Date of birth','dob','s')}${rw('Age (years)','age','s')}${rw('Annual income','annual','m','b')}`);
+let h=sec('A','Client profile',`<div class="g">${fld('NRIC no.',inp('nric','text','inputmode="numeric" placeholder="e.g. 880214-13-5678"'),'nric')}${fld('Occupation',inp('occ'))}${fld('Marital status',sel('mar',['','Single','Married','Divorced','Widowed']))}${fld('Has financial dependants?',yn('dep'))}${fld('Monthly gross income (RM)',inp('inc','number'))}${fld('Annual bonus / other income (RM)',inp('bonus','number'))}${fld('Planned retirement age',inp('ret_age','number'))}${fv('Date of birth',out('dob','s'))}${fv('Age (years)',out('age','s'))}${fv('Annual income',out('annual','m'),'t')}</div>`);
 // B
 let b='';for(let i=0;i<6;i++)b+=`<tr><td>${sel('r'+i,['','Spouse','Child','Parent','Other'])}</td><td>${inp('nm'+i)}</td><td>${inp('d'+i,'date')}</td><td>${out('dag'+i,'s')}</td><td>${out('dyr'+i,'s')}</td><td>${inp('al'+i,'number')}</td></tr>`;
 h+=sec('B','Dependants',`<div class="t"><table><tr><th>Relationship</th><th>Name</th><th>Date of birth</th><th>Age</th><th>Years of support</th><th>Monthly allowance (RM)</th></tr>${b}</table></div><p class="n">Support needs are calculated directly in Part D (Life needs analysis).</p>`);
@@ -190,16 +214,16 @@ c1b+=`<tr class="tot"><td>Total insurance premiums</td><td>${out('pmx','s')}</td
 const dn=['Home loan (mortgage)','Car loan','Personal / education loan (e.g. PTPTN)','Credit card, paylater (e.g. SPayLater) & other consumer debt','Business loan / guarantor liability','Other commitments (zakat, telco / phone instalment, electricity bills, etc.)','Expenses: food, groceries'];
 let c2='';dn.forEach((x,i)=>c2+=i===6?`<tr><td>${x}</td><td></td><td>${inp('mo6','number')}</td><td></td><td></td></tr>`:`<tr><td>${x}</td><td>${inp('o'+i,'number')}</td><td>${inp('mo'+i,'number')}</td><td>${inp('yr'+i,'number')}</td><td>${i?'':yn('mrta')}</td></tr>`);
 h+=sec('C','Financial position',`<h3>C.1 Savings, investments & insurance premiums</h3><div class="t"><table><tr><th>Item</th><th>Monthly (RM)</th><th>Total to date (RM)</th></tr>${c1}</table></div><h3>Insurance premiums</h3><div class="t"><table><tr><th>Item</th><th>Monthly premium (RM)</th></tr>${c1b}</table></div>
-<h3>C.2 Debts & commitments</h3><div class="t"><table><tr><th>Item</th><th>Outstanding (RM)</th><th>Monthly (RM)</th><th>Remaining years</th><th>Home loan covered by MRTA/MRTT or MLTA/MLTT?</th></tr>${c2}</table></div>${rw('Total debts (outstanding)','td')}${rw('Total monthly commitments & expenses','tm','m','b')}${rw('Less: home loan covered by MRTA/MRTT / MLTA/MLTT (auto)','cov')}${ri('Less: other debt covered (credit-linked cover, etc.)','oc')}${rw('Net debts to be protected','net','m','b')}
-<h3>Monthly cash-flow analysis</h3>${rw('Monthly gross income','cf_inc')}${rw('Less: monthly savings & investments (C.1)','cf_sav')}${rw('Less: monthly insurance premiums (C.1)','cf_prem')}${rw('Less: monthly debts, commitments & expenses (C.2)','cf_debt')}${rw('Balance after savings, premiums & debts','cf_bal','m','b')}<div id="bar"></div>`);
+<h3 class="c2">C.2 Debts & commitments</h3><div class="t"><table><tr><th>Item</th><th>Outstanding (RM)</th><th>Monthly (RM)</th><th>Remaining years</th><th>Home loan covered by MRTA/MRTT or MLTA/MLTT?</th></tr>${c2}</table></div>${rw('Total debts (outstanding)','td','m','t')}${rw('Total monthly commitments & expenses','tm','m','b t')}${rw('Less: home loan covered by MRTA/MRTT / MLTA/MLTT (auto)','cov')}${ri('Less: other debt covered (credit-linked cover, etc.)','oc')}${rw('Net debts to be protected','net','m','b t')}
+<h3>Monthly cash-flow analysis</h3>${rw('Monthly gross income','cf_inc')}${rw('Less: monthly savings & investments (C.1)','cf_sav')}${rw('Less: monthly insurance premiums (C.1)','cf_prem')}${rw('Less: monthly debts, commitments & expenses (C.2)','cf_debt')}${rw('Balance after savings, premiums & debts','cf_bal','m','b t')}<div id="bar"></div>`);
 // D
 h+=sec('D','Life (death / TPD) needs analysis',`${rw('Net debts (from C.2)','net2')}${ri('Final expenses / estate admin','fin')}${ri('Children’s education fund','edu')}<div class="r"><span>Emergency fund <small data-o="emx" data-f="s"></small></span>${out('emer')}</div>
-<div class="r b"><span>Income replacement for dependants</span>${out('irep')}</div><div id="deplist"></div><p class="n" id="depex"></p>
-${rw('Less: savings & investments to offset (from C.1)','sv')}${rw('Needs-based life requirement','nb','m','b')}${rw('Rule-of-thumb requirement (income × multiple)','xr')}${rw('Life target used (higher of the two)','tg','m','b')}`);
+<div class="r b t"><span>Income replacement for dependants</span>${out('irep')}</div><div id="deplist"></div><p class="n" id="depex"></p>
+${rw('Less: savings & investments to offset (from C.1)','sv')}${rw('Needs-based life requirement','nb','m','b t')}${rw('Rule-of-thumb requirement (income × multiple)','xr')}${rw('Life target used (higher of the two)','tg','m','b t')}`);
 // E
-const cv=[['life','Life (death / TPD)'],['ci','Critical illness'],['pa','Accidental (PA)']];
+const cv=[['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']];
 let e='';cv.forEach(([k,l])=>e+=`<tr><td>${l}</td><td>${inp('ex_'+k,'number')}</td><td>${out('cn_'+k)}</td><td>${out('cd_'+k,'sa')}</td><td>${out('cd_'+k,'sf')}</td><td>${out('cy_'+k,'y')}</td></tr>`);
-h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Shortfall / surplus (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div>${rw('Total annual premium, all policies (from C.1)','annprem')}${rw('Premium as % of annual income','pp','p')}<h3>Protection lifeline</h3><div id="ecards"></div>`);
+h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Shortfall / surplus (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div>${rw('Total annual premium, all policies (from C.1)','annprem','m','t')}${rw('Premium as % of annual income','pp','p')}<h3 class="lf">Protection lifeline</h3><div id="ecards"></div>`);
 // F
 const mr=[['Daily room & board (RM/day)','m_rb','rb','m'],['Pre-hospitalisation (days)','m_pre','pre','s'],['Post-hospitalisation (days)','m_post','post','s'],['Annual limit (RM)','m_ann','ann','m']];
 let m='';mr.forEach(([l,k,a,f])=>m+=`<tr><td>${l}</td><td>${inp(k,'number')}</td><td>${out('mn_'+a,f)}</td><td>${out('s_'+k.slice(2),'s')}</td></tr>`);
@@ -207,17 +231,17 @@ m+=`<tr><td>ICU (no. of days)</td><td>${inp('m_icud','number')}</td><td></td><td
 const yl=[['cc','Outpatient cancer: consultation'],['ct','Outpatient cancer: examination & tests'],['cd','Outpatient cancer: take-home drugs'],['dia','Outpatient kidney dialysis'],['day','Day surgery & emergency accident outpatient'],['org','Organ transplant'],['ovs','Overseas treatment']];
 yl.forEach(([k,l])=>m+=`<tr><td>${l} (Y/N)</td><td>${yn('m_'+k)}</td><td></td><td>${out('s_'+k,'s')}</td></tr>`);
 m+=`<tr><td>Parent accompanying child (RM/day)</td><td>${ch('m_par','As charged')}</td><td></td><td></td></tr><tr><td>No claims benefit (Y/N)</td><td><span class="ch">${yn('m_ncb')}<select class="hid" data-k="m_ncb_v" data-show="m_ncb" data-sv="Y"><option></option><option>RM500 yearly</option><option>RM1,000 yearly</option></select></span></td><td></td><td>${out('s_ncb','s')}</td></tr>`;
-h+=sec('F','Medical coverage',`<div class="g">${fld('Insurer',inp('m_name'))}${fld('Plan name',inp('m_plan'))}${fld('Deductible / co-insurance',inp('m_ded'))}${fld('Outpatient cancer / kidney annual limit (RM)',inp('m_oplim','number'))}${fld('Renewable up to age / premium type',inp('m_renew'))}${fld('Annual medical premium (RM)',inp('m_prem','number'))}</div><div class="t" style="margin-top:8px"><table><tr><th>Benefit</th><th>Client’s plan</th><th>Suggested minimum</th><th>Status</th></tr>${m}</table></div>${rw('Medical gaps (count)','mg','s','b')}`,0);
+h+=sec('F','Medical coverage',`<div class="g">${fld('Insurer',inp('m_name'))}${fld('Plan name',inp('m_plan'))}${fld('Deductible / co-insurance',inp('m_ded'))}${fld('Outpatient cancer / kidney annual limit (RM)',inp('m_oplim','number'))}${fld('Renewable up to age / premium type',inp('m_renew'))}${fld('Annual medical premium (RM)',inp('m_prem','number'))}</div><div class="t" style="margin-top:8px"><table><tr><th>Benefit</th><th>Client’s plan</th><th>Suggested minimum</th><th>Status</th></tr>${m}</table></div>${rw('Medical gaps (count)','mg','s','b t')}`,0);
 // G
 let g='';for(let i=0;i<10;i++)g+=`<tr><td>${inp('rs'+i,'number')}</td><td>${out('ra'+i)}</td><td>${out('rc'+i)}</td><td>${out('rg'+i)}</td><td>${out('rs_'+i,'s')}</td><td>${out('rf'+i,'p')}</td></tr>`;
-h+=sec('G','Retirement need',`<div class="g">${fld('Planned retirement age',inp('ret_age','number'))}${fld('Projected retirement savings at retirement (RM) – EPF / PRS / other',inp('ret_sav','number'))}${fld('Inflation rate (% p.a.)',inp('g_infl','number'))}${fld('Savings return after retirement (% p.a.)',inp('g_ret','number'))}</div>${rw('Years to retirement','y1','s')}${rw('Years in retirement','y2','s')}${rw('Inflation factor to retirement','fac','x2')}<div class="t" style="margin-top:8px"><table><tr><th>Monthly spending (today’s RM)</th><th>First-year spending at retirement</th><th>Fund needed at retirement</th><th>Gap</th><th>Status</th><th>Funded</th></tr>${g}</table></div><p class="n">Spending levels are editable. Fund needed = present value at retirement of annual spending, inflated to retirement and paid at the start of each year, with savings earning the return you enter. Gap shows once projected savings are keyed in.</p><h3>Retirement lifeline</h3><div id="rcard"></div>`,0);
+h+=sec('G','Retirement need',`<div class="g">${fld('Planned retirement age',inp('ret_age','number'))}${fld('Projected retirement savings at retirement (RM) – EPF / PRS / other',inp('ret_sav','number'))}${fld('Inflation rate (% p.a.)',inp('g_infl','number'))}${fld('Savings return after retirement (% p.a.)',inp('g_ret','number'))}</div>${rw('Years to retirement','y1','s')}${rw('Years in retirement','y2','s')}<div class="t" style="margin-top:8px"><table><tr><th>Monthly spending (today’s RM)</th><th>First-year spending at retirement</th><th>Fund needed at retirement</th><th>Gap</th><th>Status</th><th>Funded</th></tr>${g}</table></div><p class="n">Spending levels are editable. Fund needed = present value at retirement of annual spending, inflated to retirement and paid at the start of each year, with savings earning the return you enter. Gap shows once projected savings are keyed in.</p><h3>Retirement lifeline</h3><div id="rcard"></div>`,0);
 // H
-h+=sec('H','Estate planning (will / trust)',`<div class="g">${fld('Will done? (Y/N)',yn('will'))}${fld('Will: year made / drawn up by',inp('will_d'))}${fld('Trust done? (Y/N)',yn('trust'))}${fld('Trust: type / year / trustee',inp('trust_d'))}</div><div class="r"><span>Will status</span>${out('s_will','s')}</div><div class="r"><span>Trust status</span>${out('s_trust','s')}</div>${rw('Estate planning summary','es','s','b')}`);
+h+=sec('H','Estate planning (will / trust)',`<div class="g">${fld('Will done? (Y/N)',yn('will'))}${fld('Will: year made / drawn up by',inp('will_d'))}${fld('Trust done? (Y/N)',yn('trust'))}${fld('Trust: type / year / trustee',inp('trust_d'))}</div><div class="r"><span>Will status</span>${out('s_will','s')}</div><div class="r"><span>Trust status</span>${out('s_trust','s')}</div>${rw('Estate planning summary','es','s','b t')}`);
 // Assumptions
 const al=[['child','Child dependency age (years)'],['spouse','Years of spouse support'],['par','Years of parent / other support'],['emer','Emergency fund (months of income)'],['lifex','Life cover: multiple of annual income'],['ciy','Critical illness: years of income'],['pay','Accidental: years of income'],['rb','Medical min room & board (RM/day)'],['pre','Medical min pre-hospitalisation (days)'],['post','Medical min post-hospitalisation (days)'],['ann','Medical min annual limit (RM)'],['life','Medical min lifetime limit (RM)'],['plan','Retirement plan-to age (years)']];
 h+=sec('','Assumptions & benchmarks (editable)',`<div class="g">${al.map(([k,l])=>fld(l,inp('a_'+k,'number'))).join('')}</div><p class="n">Common rules of thumb and placeholders, not regulatory figures.</p>`,0).replace('<span class="no"></span>','').replace('<details class="card"','<details class="card noprint"');
 document.getElementById('app').innerHTML=h;
-document.getElementById('byg').innerHTML=fld('Name',inp('by'))+fld('Designation',inp('byt'))+fld('Phone',inp('byc','tel','inputmode="tel" autocomplete="tel" placeholder="e.g. 012-345 6789"'))+fld('Email',inp('bye','email','inputmode="email" autocomplete="email" placeholder="name@example.com"'));
+document.getElementById('byg').innerHTML=fld('Name',inp('by'))+fld('Designation',inp('byt'),'wide')+fld('Phone',inp('byc','tel','inputmode="tel" autocomplete="tel" placeholder="e.g. 012-345 6789"'))+fld('Email',inp('bye','email','inputmode="email" autocomplete="email" placeholder="name@example.com"'),'wide');
 const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Kuala_Lumpur'});
 document.getElementById('dt').textContent=today;document.getElementById('dt2').textContent=today;
 document.querySelectorAll('[data-k]').forEach(el=>{const v=rawM(el.dataset.k);el.value=el.dataset.m?fmtM(v):v});
@@ -241,13 +265,13 @@ function retLine(rows,y2,sa){
   if(!ok)s+=`<rect class="lg2" x="${px(r.n)}" y="${y}" width="${px(y2)-px(r.n)}" height="12"/>`;
   s+=`<text x="${x1+8}" y="${y+10}" class="${ok?'':'nd'}">${ok?'Funded to '+Math.round(sa+y2):'Lasts to '+Math.floor(sa+r.n)}</text>`});
  return s+`<line class="lm" x1="${x1}" y1="16" x2="${x1}" y2="${H-8}"/></svg>`}
-const MS={life:{t:'Life (death / TPD)',s:'If you were no longer around',
+const MS={life:{t:'Life / Total Permanent Disability',s:'If you were no longer around',
  g:(c,d,g)=>`If you were no longer around, your loved ones could only sustain up to <b>${c.toFixed(1)} years</b> of your income, against a protection need of <b>${d.toFixed(1)} years</b>: a shortfall of <b>${fm(g,'m')}</b>. <b>What this could mean:</b> your family may struggle to settle the home loan and other debts, keep the children’s education on track and maintain their current lifestyle, and may have to use up savings or sell assets to cope.`,
  o:(x,c,d)=>`Excellent! Your life cover of <b>${fm(x,'m')}</b> meets your protection need${d>0?`, with a surplus of <b>${fm(d,'m')}</b>`:''}. Your loved ones would stay financially secure for up to <b>${c.toFixed(1)} years</b> of income even if you were no longer around. ${d>0?'You are ahead of the recommended level, which shows how seriously you take your family’s security. ':''}Well done on putting your family first.`},
- ci:{t:'Critical illness',s:'If you lose the ability to work through a critical illness',
+ ci:{t:'Critical Illness',s:'If you lose the ability to work through a critical illness',
  g:(c,d,g)=>`If a critical illness left you unable to work, your family could only sustain up to <b>${c.toFixed(1)} years</b> of your income, against a recommended <b>${d.toFixed(1)} years</b>: a shortfall of <b>${fm(g,'m')}</b>. <b>What this could mean:</b> your income may stop while treatment costs, loan instalments and household bills carry on, so your family may have to use up savings or EPF, or take on debt, just to keep going.`,
  o:(x,c,d)=>`Well done! Your critical illness cover of <b>${fm(x,'m')}</b> meets the recommended ${A('ciy')} years of income${d>0?`, with a surplus of <b>${fm(d,'m')}</b>`:''}. If illness kept you from working, your family would be protected for up to <b>${c.toFixed(1)} years</b>. ${d>0?'Staying ahead of the recommended level is a truly thoughtful safeguard for your loved ones.':'A thoughtful safeguard for your loved ones.'}`},
- pa:{t:'Accidental (PA)',s:'If an accident leaves you unable to work',
+ pa:{t:'Personal Accident',s:'If an accident leaves you unable to work',
  g:(c,d,g)=>`If an accident left you unable to work or earn, your family could only sustain up to <b>${c.toFixed(1)} years</b> of your income, against a recommended <b>${d.toFixed(1)} years</b>: a shortfall of <b>${fm(g,'m')}</b>. <b>What this could mean:</b> your income may stop or fall sharply while medical, rehabilitation and daily living costs continue, so your family may have to use up savings, sell assets or borrow to cope.`,
  o:(x,c,d)=>`Great job! Your accidental cover of <b>${fm(x,'m')}</b> meets the recommended ${A('pay')} years of income${d>0?`, with a surplus of <b>${fm(d,'m')}</b>`:''}, protecting your family for up to <b>${c.toFixed(1)} years</b> if an accident stopped you from earning. ${d>0?'Being ahead of the recommended level shows real care for your family. ':''}Well protected.`}};
 
@@ -316,19 +340,29 @@ function calc(){
   el.textContent=fm(v,f);
   el.classList.toggle('ok',sd?(nm&&(f==='sf'?v>=0:v>0)):v==='OK');
   el.classList.toggle('gap',sd?(nm&&v<0):v==='GAP')});
- const tl=(w,d)=>typeof d!=='number'?[w+' cover','-','']:d<0?[w+' shortfall',fm(-d,'m'),'gap']:d>0?[w+' surplus',fm(d,'m'),'ok']:[w+' cover','Fully covered','ok'];
- const T=[tl('Life',O.cd_life),tl('CI',O.cd_ci),tl('PA',O.cd_pa),['Medical gaps',O.mg,''],['Monthly balance',fm(bal,'m')||'-',''],['Estate',O.es||'-','']];
- document.getElementById('tiles').innerHTML=T.map(([l,v,c])=>`<div class="tile"><small>${l}</small><b class="${c}">${v}</b></div>`).join('');
+ const tl=(t,k)=>{const d=O['cd_'+k],y=O['cy_'+k],ys=typeof y==='number'?y.toFixed(1)+' yrs of income':'';
+  if(typeof d!=='number')return {t,h:'-',s:'Enter income',c:''};
+  return d<0?{t,h:'Shortfall '+fm(-d,'m'),s:'Can sustain '+ys,c:'gap'}:d>0?{t,h:'Surplus '+fm(d,'m'),s:'Covered '+ys,c:'ok'}:{t,h:'Fully covered',s:'Covered '+ys,c:'ok'}};
+ document.getElementById('tiles').innerHTML=[tl('Life / Total Permanent Disability','life'),tl('Critical Illness','ci'),tl('Personal Accident','pa')].map(x=>`<div class="tile"><small>${x.t}</small><b class="${x.c}">${x.h}</b><span class="yr">${x.s}</span></div>`).join('');
 }
-document.addEventListener('input',ev=>{const t=ev.target,k=t.dataset&&t.dataset.k;if(k){S[k]=t.dataset.m?cleanM(t.value):t.value;save();calc()}});
+document.addEventListener('input',ev=>{const t=ev.target,k=t.dataset&&t.dataset.k;if(k){const m=t.dataset.m;S[k]=m?cleanM(t.value):t.value;save();document.querySelectorAll(`[data-k="${k}"]`).forEach(o=>{if(o!==t)o.value=m?fmtM(S[k]):S[k]});calc()}});
 document.addEventListener('focusin',ev=>{const t=ev.target;if(t.dataset&&t.dataset.m&&t.dataset.k)t.value=rawM(t.dataset.k)});
 document.addEventListener('focusout',ev=>{const t=ev.target;if(t.dataset&&t.dataset.m&&t.dataset.k)t.value=fmtM(rawM(t.dataset.k))});
 calc();
 // PDF / print
 let was=[];
-window.addEventListener('beforeprint',()=>{try{document.activeElement.blur()}catch(e){}const d=[...document.querySelectorAll('details')];was=d.map(x=>x.open);d.forEach(x=>x.open=true);document.body.classList.toggle('hn',document.getElementById('hn').checked)});
+function prep(){
+ try{document.activeElement.blur()}catch(e){}
+ document.querySelectorAll('.pv').forEach(x=>x.remove());
+ document.querySelectorAll('input,select').forEach(el=>{
+  if(el.closest('.noprint')||el.classList.contains('hid')||el.type==='checkbox'||el.type==='number'||el.dataset.m)return;
+  let t=el.tagName==='SELECT'?(el.selectedIndex>=0?el.options[el.selectedIndex].text:''):el.value;
+  if(el.type==='date'&&el.value){const d=new Date(el.value+'T00:00:00');if(!isNaN(d))t=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}
+  const s=document.createElement('span');s.className='pv'+(el.classList.contains('pn')?' pnv':'')+(el.type==='date'?' nw':'');s.textContent=t;el.insertAdjacentElement('beforebegin',s)});
+}
+window.addEventListener('beforeprint',()=>{prep();const d=[...document.querySelectorAll('details')];was=d.map(x=>x.open);d.forEach(x=>x.open=true);document.body.classList.toggle('hn',document.getElementById('hn').checked)});
 window.addEventListener('afterprint',()=>{[...document.querySelectorAll('details')].forEach((x,i)=>x.open=was[i])});
-document.getElementById('pdf').onclick=()=>{try{window.print()}catch(e){}};
+document.getElementById('pdf').onclick=()=>{try{prep();window.print()}catch(e){}};
 document.getElementById('cp').onclick=()=>{
  const sd=k=>{const d=O['cd_'+k];return typeof d!=='number'?'-':d<0?'shortfall '+fm(-d,'m'):d>0?'surplus '+fm(d,'m'):'fully covered'};
  const t=`Client protection summary (RM)\nPrepared for: ${S.name||'-'}  Age: ${O.age||'-'}\nAnnual income: ${fm(O.annual,'m')||'-'}\nLife target: ${fm(O.tg,'m')||'-'}  (${sd('life')})\nCI: ${sd('ci')}\nPA: ${sd('pa')}\nMedical gaps: ${O.mg}\nEstate: ${O.es||'-'}\nPrepared by: ${[S.by,S.byt,S.byc,S.bye].filter(Boolean).join(' · ')||'-'}`;
@@ -357,7 +391,7 @@ function sheetRows(incNric){
  add('row',['Saved on (MYT)',new Date().toLocaleString('en-GB',{timeZone:'Asia/Kuala_Lumpur'})]);add('blank',[]);
  add('sec',['A. CLIENT PROFILE']);
  if(incNric)add('row',['NRIC no.',S.nric||'']);
- add('row',['Date of birth',O.dob]);add('row',['Age (years)',v(O.age)]);add('row',['Occupation',S.occ||'']);add('row',['Marital status',S.mar||'']);add('row',['Has financial dependants?',S.dep||'']);
+ add('row',['Date of birth',O.dob]);add('row',['Age (years)',v(O.age)]);add('row',['Occupation',S.occ||'']);add('row',['Marital status',S.mar||'']);add('row',['Has financial dependants?',S.dep||'']);add('row',['Planned retirement age',n('ret_age')]);
  add('row',['Monthly gross income',n('inc')],[1]);add('row',['Annual bonus / other income',n('bonus')],[1]);add('tot',['Annual income',O.annual],[1]);add('blank',[]);
  add('sec',['B. DEPENDANTS']);add('th',['Relationship','Name','Date of birth','Age','Years of support','Monthly allowance']);
  for(let i=0;i<6;i++)if(S['r'+i])add('row',[S['r'+i],S['nm'+i]||'',S['d'+i]||'',v(O['dag'+i]),v(O['dyr'+i]),n('al'+i)],[5]);
@@ -381,9 +415,9 @@ function sheetRows(incNric){
  add('row',['Less: savings & investments to offset (from C.1)',-O.st],[1]);add('tot',['Needs-based life requirement',O.nb],[1]);
  add('row',['Rule-of-thumb requirement ('+A('lifex')+'× annual income)',O.xr],[1]);add('tot',['Life target used (higher of the two)',O.tg],[1]);
  add('blank',[]);add('sec',['E. EXISTING COVERAGE vs NEED']);add('th',['Cover','Existing sum assured','Needed','Shortfall (-) / surplus (+)','Status','Years of income covered']);
- [['life','Life (death / TPD)'],['ci','Critical illness'],['pa','Accidental (PA)']].forEach(([k,l])=>add('row',[l,n('ex_'+k),O['cn_'+k],O['cd_'+k],fm(O['cd_'+k],'sf'),v(O['cy_'+k])],[1,2,3]));
+ [['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']].forEach(([k,l])=>add('row',[l,n('ex_'+k),O['cn_'+k],O['cd_'+k],fm(O['cd_'+k],'sf'),v(O['cy_'+k])],[1,2,3]));
  add('row',['Total annual premium, all policies',O.annprem],[1]);add('row',['Premium as % of annual income',v(O.pp)],[],[1]);
- [['life','Life'],['ci','Critical illness'],['pa','Accidental (PA)']].forEach(([k,l])=>add('note',[l+': '+((O.em||{})[k]||'')]));
+ [['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']].forEach(([k,l])=>add('note',[l+': '+((O.em||{})[k]||'')]));
  add('blank',[]);add('sec',['F. MEDICAL COVERAGE']);
  add('row',['Insurer',S.m_name||'']);add('row',['Plan name',S.m_plan||'']);add('row',['Deductible / co-insurance',S.m_ded||'']);add('row',['Outpatient cancer / kidney annual limit',mv('m_oplim')],[1]);add('row',['Renewable up to age / premium type',S.m_renew||'']);add('row',['Annual medical premium',mv('m_prem')],[1]);
  add('th',['Benefit','Client’s plan','Suggested minimum','Status']);
@@ -398,7 +432,7 @@ function sheetRows(incNric){
  add('blank',[]);add('sec',['G. RETIREMENT NEED']);
  add('row',['Planned retirement age',n('ret_age')]);add('row',['Projected retirement savings at retirement',mv('ret_sav')],[1]);
  add('row',['Inflation rate (% p.a.)',n('g_infl')/100],[],[1]);add('row',['Savings return after retirement (% p.a.)',n('g_ret')/100],[],[1]);
- add('row',['Years to retirement',v(O.y1)]);add('row',['Years in retirement',v(O.y2)]);add('row',['Inflation factor to retirement',v(O.fac)]);
+ add('row',['Years to retirement',v(O.y1)]);add('row',['Years in retirement',v(O.y2)]);
  add('th',['Monthly spending (today’s RM)','First-year spending at retirement','Fund needed at retirement','Gap vs projected savings','Status','Funded (%)']);
  for(let i=0;i<10;i++)if(O['ra'+i]!=='')add('row',[n('rs'+i),O['ra'+i],O['rc'+i],O['rg'+i],O['rs_'+i],v(O['rf'+i])],[0,1,2,3],[5]);
  add('blank',[]);add('sec',['H. ESTATE PLANNING (WILL / TRUST)']);
