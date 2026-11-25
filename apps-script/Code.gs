@@ -86,8 +86,14 @@ function writeRows_(sh, rows) {
     (r.m || []).forEach(function (ci) { if (typeof r.c[ci] === 'number') g.money.push(col_(ci + 1) + rn); });
     (r.p || []).forEach(function (ci) { if (typeof r.c[ci] === 'number') g.pct.push(col_(ci + 1) + rn); });
     r.c.forEach(function (v, ci) {
-      if (v === 'OK') g.ok.push(col_(ci + 1) + rn);
-      else if (v === 'GAP') g.gap.push(col_(ci + 1) + rn);
+      var good = (v === 'OK' || v === 'Surplus' || v === 'Fully covered');
+      var bad = (v === 'GAP' || v === 'Shortfall');
+      if (good) g.ok.push(col_(ci + 1) + rn);
+      else if (bad) g.gap.push(col_(ci + 1) + rn);
+      // Shortfall / surplus: also colour the amount in the cell just before the status word
+      if ((v === 'Surplus' || v === 'Shortfall') && ci > 0 && typeof r.c[ci - 1] === 'number') {
+        (good ? g.ok : g.gap).push(col_(ci) + rn);
+      }
     });
   });
   function on(list, fn) { if (list.length) fn(sh.getRangeList(list)); }
@@ -97,7 +103,7 @@ function writeRows_(sh, rows) {
   on(g.th, function (r) { r.setBackground('#e8edf5').setFontWeight('bold'); });
   on(g.tot, function (r) { r.setFontWeight('bold'); });
   on(g.note, function (r) { r.setFontStyle('italic').setFontColor('#666666'); });
-  on(g.money, function (r) { r.setNumberFormat('"RM "#,##0;[Red]-"RM "#,##0'); });
+  on(g.money, function (r) { r.setNumberFormat('"RM"#,##0;[Red]-"RM"#,##0'); });
   on(g.pct, function (r) { r.setNumberFormat('0%'); });
   on(g.ok, function (r) { r.setFontColor('#2b7a4b').setFontWeight('bold'); });
   on(g.gap, function (r) { r.setFontColor('#b4472b').setFontWeight('bold'); });
