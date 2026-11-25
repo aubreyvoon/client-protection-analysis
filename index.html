@@ -27,7 +27,10 @@ main{max-width:920px;margin:0 auto;padding:14px 14px 40px}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:0 0 14px}
 .tile{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:10px;padding:9px 10px}
 .tile small{display:block;color:var(--mut);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.tile{text-align:center}
 .tile b{font:600 15px var(--serif)}
+.tile b.gap{color:var(--gap)}
+.tile b.ok{color:var(--ok)}
 details.card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 14px;overflow:hidden}
 summary{cursor:pointer;list-style:none;padding:13px 16px;font:600 17px var(--serif);color:var(--acc);display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}
 summary::-webkit-details-marker{display:none}
@@ -42,13 +45,16 @@ input,select{font:16px -apple-system,Arial,sans-serif;padding:8px;border:1px sol
 table{border-collapse:collapse;width:100%;min-width:540px}
 th{background:var(--nav);color:#fff;font:600 11px -apple-system,Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;text-align:left;padding:7px 6px}
 td{border-bottom:1px solid var(--line);padding:5px 4px;font-size:14px;vertical-align:middle}
-td input,td select{padding:6px}
+td input,td select{padding:6px;text-align:center;text-align-last:center}
+th:not(:first-child),td:not(:first-child){text-align:center}
 tr.sub td{background:var(--bg);font:600 12px var(--serif);color:var(--gold);letter-spacing:.05em;text-transform:uppercase}
 tr.tot td{font-weight:700}
 .r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
 .r.b{font-weight:700}
 .r.sm{padding:4px 0 4px 14px;font-size:13px;color:var(--mut)}
-.ri input{width:170px;text-align:right}
+.ri input{width:140px}
+input[data-m]{text-align:center}
+.r>b:not(.ok):not(.gap){min-width:140px;text-align:center}
 small{color:var(--mut)}
 .o{font-weight:600;white-space:nowrap}
 .o.ok{background:var(--okb);color:var(--ok);padding:1px 8px;border-radius:6px}
@@ -74,6 +80,8 @@ small{color:var(--mut)}
 .ll text{fill:var(--mut);font:11px -apple-system,Arial,sans-serif}.ll text.nd{fill:var(--acc);font-weight:600}
 .key{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--mut);margin-top:2px}
 .key b{color:var(--fg)}
+.key b.gap{color:var(--gap)}
+.key b.ok{color:var(--ok)}
 .by{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:14px;padding:14px 16px;margin:0 0 14px}
 .pb{font:italic 14px var(--serif);color:var(--gold);margin-bottom:6px}
 .disc{font-size:11px;color:var(--mut);margin:10px 0 0}
@@ -94,6 +102,7 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
  input[type=number]::-webkit-inner-spin-button{display:none}
  .hid{display:none!important}
  .pn{color:#fff!important}
+ textarea{display:none!important}
 }
 </style>
 </head>
@@ -148,20 +157,26 @@ const age=d=>d?Math.floor((Date.now()-new Date(d))/(365.25*864e5)):null;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function dobN(s){const c=(s||'').replace(/[\s-]/g,'');if(!/^\d{12}$/.test(c))return null;const yy=+c.slice(0,2),m=+c.slice(2,4),d=+c.slice(4,6),y=(yy>new Date().getFullYear()%100?1900:2000)+yy,dt=new Date(y,m-1,d);return dt.getFullYear()===y&&dt.getMonth()===m-1&&dt.getDate()===d?dt:null}
 const fm=(v,f)=>{if(v===''||v==null||(typeof v==='number'&&!isFinite(v)))return '';
- if(f==='m')return v===0?'-':(v<0?'-':'')+'RM '+Math.round(Math.abs(v)).toLocaleString('en-MY');
+ if(f==='m')return v===0?'-':(v<0?'-':'')+'RM'+Math.round(Math.abs(v)).toLocaleString('en-MY');
+ if(f==='sf')return v<0?'Shortfall':v>0?'Surplus':'Fully covered';
+ if(f==='sa')return fm(Math.abs(v),'m');
  if(f==='p')return Math.round(v*100)+'%';if(f==='x2')return v.toFixed(2)+'x';if(f==='y')return v.toFixed(1)+' yrs';return String(v)};
-const inp=(k,t='text',x='')=>`<input data-k="${k}" type="${t}" ${t==='number'?'step="any" inputmode="decimal"':''} ${x}>`;
+const MON=/^(inc|bonus|al\d|sm\d|st\d|pm\d|o\d|mo\d|oc|fin|edu|ex_(life|ci|pa)|m_rb|m_ann|m_oplim|m_prem|m_lt_v|m_par_v|ret_sav|rs\d|a_(rb|ann|life))$/;
+const cleanM=v=>String(v).replace(/[^\d.\-]/g,'');
+const fmtM=v=>{const x=parseFloat(v);return v===''||v==null||isNaN(x)?'':(x<0?'-':'')+'RM'+Math.abs(x).toLocaleString('en-MY',{maximumFractionDigits:2})};
+const rawM=k=>S[k]??(k.startsWith('a_')?A0[k.slice(2)]:'');
+const inp=(k,t='text',x='')=>MON.test(k)?`<input data-k="${k}" data-m="1" type="text" inputmode="decimal" autocomplete="off" ${/placeholder=/.test(x)?'':'placeholder="RM"'} ${x}>`:`<input data-k="${k}" type="${t}" ${t==='number'?'step="any" inputmode="decimal"':''} ${x}>`;
 const sel=(k,o)=>`<select data-k="${k}">${o.map(v=>`<option>${v}</option>`).join('')}</select>`;
 const yn=k=>sel(k,['','Y','N']);
 const out=(id,f='m')=>`<b class="o" data-o="${id}" data-f="${f}"></b>`;
 const fld=(l,c,x='')=>`<label class="f ${x}"><span>${l}</span>${c}</label>`;
 const rw=(l,id,f='m',b='')=>`<div class="r ${b}"><span>${l}</span>${out(id,f)}</div>`;
 const ri=(l,k)=>`<div class="r"><span>${l}</span><span class="ri">${inp(k,'number','placeholder="RM"')}</span></div>`;
-const ch=(k,o)=>`<span class="ch">${sel(k,['',o,'Key in amount'])}<input class="hid" data-k="${k}_v" data-show="${k}" type="number" step="any" inputmode="decimal" placeholder="RM"></span>`;
+const ch=(k,o)=>`<span class="ch">${sel(k,['',o,'Key in amount'])}<input class="hid" data-k="${k}_v" data-show="${k}" type="text" data-m="1" inputmode="decimal" autocomplete="off" placeholder="RM"></span>`;
 const sec=(no,t,h,o=1)=>`<details class="card" ${o?'open':''}><summary><span class="no">${no}</span>${t}</summary><div class="in">${h}</div></details>`;
 
 // A
-let h=sec('A','Client profile',`<div class="g">${fld('NRIC no.',inp('nric','text','inputmode="numeric" placeholder="e.g. 880214-13-5678"'),'nric')}${fld('Occupation',inp('occ'))}${fld('Marital status',sel('mar',['','Single','Married','Divorced','Widowed']))}${fld('Has financial dependants?',yn('dep'))}${fld('Monthly gross income (RM)',inp('inc','number'))}${fld('Annual bonus / other income (RM)',inp('bonus','number'))}</div>${rw('Date of birth (auto from NRIC)','dob','s')}${rw('Age (years)','age','s')}${rw('Annual income','annual','m','b')}`);
+let h=sec('A','Client profile',`<div class="g">${fld('NRIC no.',inp('nric','text','inputmode="numeric" placeholder="e.g. 880214-13-5678"'),'nric')}${fld('Occupation',inp('occ'))}${fld('Marital status',sel('mar',['','Single','Married','Divorced','Widowed']))}${fld('Has financial dependants?',yn('dep'))}${fld('Monthly gross income (RM)',inp('inc','number'))}${fld('Annual bonus / other income (RM)',inp('bonus','number'))}</div>${rw('Date of birth','dob','s')}${rw('Age (years)','age','s')}${rw('Annual income','annual','m','b')}`);
 // B
 let b='';for(let i=0;i<6;i++)b+=`<tr><td>${sel('r'+i,['','Spouse','Child','Parent','Other'])}</td><td>${inp('nm'+i)}</td><td>${inp('d'+i,'date')}</td><td>${out('dag'+i,'s')}</td><td>${out('dyr'+i,'s')}</td><td>${inp('al'+i,'number')}</td></tr>`;
 h+=sec('B','Dependants',`<div class="t"><table><tr><th>Relationship</th><th>Name</th><th>Date of birth</th><th>Age</th><th>Years of support</th><th>Monthly allowance (RM)</th></tr>${b}</table></div><p class="n">Support needs are calculated directly in Part D (Life needs analysis).</p>`);
@@ -183,15 +198,15 @@ h+=sec('D','Life (death / TPD) needs analysis',`${rw('Net debts (from C.2)','net
 ${rw('Less: savings & investments to offset (from C.1)','sv')}${rw('Needs-based life requirement','nb','m','b')}${rw('Rule-of-thumb requirement (income × multiple)','xr')}${rw('Life target used (higher of the two)','tg','m','b')}`);
 // E
 const cv=[['life','Life (death / TPD)'],['ci','Critical illness'],['pa','Accidental (PA)']];
-let e='';cv.forEach(([k,l])=>e+=`<tr><td>${l}</td><td>${inp('ex_'+k,'number')}</td><td>${out('cn_'+k)}</td><td>${out('cg_'+k)}</td><td>${out('cs_'+k,'s')}</td><td>${out('cy_'+k,'y')}</td></tr>`);
-h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Gap (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div>${rw('Total annual premium, all policies (from C.1)','annprem')}${rw('Premium as % of annual income','pp','p')}<h3>Protection lifeline</h3><div id="ecards"></div>`);
+let e='';cv.forEach(([k,l])=>e+=`<tr><td>${l}</td><td>${inp('ex_'+k,'number')}</td><td>${out('cn_'+k)}</td><td>${out('cd_'+k,'sa')}</td><td>${out('cd_'+k,'sf')}</td><td>${out('cy_'+k,'y')}</td></tr>`);
+h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Shortfall / surplus (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div>${rw('Total annual premium, all policies (from C.1)','annprem')}${rw('Premium as % of annual income','pp','p')}<h3>Protection lifeline</h3><div id="ecards"></div>`);
 // F
 const mr=[['Daily room & board (RM/day)','m_rb','rb','m'],['Pre-hospitalisation (days)','m_pre','pre','s'],['Post-hospitalisation (days)','m_post','post','s'],['Annual limit (RM)','m_ann','ann','m']];
 let m='';mr.forEach(([l,k,a,f])=>m+=`<tr><td>${l}</td><td>${inp(k,'number')}</td><td>${out('mn_'+a,f)}</td><td>${out('s_'+k.slice(2),'s')}</td></tr>`);
 m+=`<tr><td>ICU (no. of days)</td><td>${inp('m_icud','number')}</td><td></td><td></td></tr><tr><td>Lifetime limit</td><td>${ch('m_lt','Unlimited')}</td><td>${out('mn_life')}</td><td>${out('s_lt','s')}</td></tr>`;
 const yl=[['cc','Outpatient cancer: consultation'],['ct','Outpatient cancer: examination & tests'],['cd','Outpatient cancer: take-home drugs'],['dia','Outpatient kidney dialysis'],['day','Day surgery & emergency accident outpatient'],['org','Organ transplant'],['ovs','Overseas treatment']];
 yl.forEach(([k,l])=>m+=`<tr><td>${l} (Y/N)</td><td>${yn('m_'+k)}</td><td></td><td>${out('s_'+k,'s')}</td></tr>`);
-m+=`<tr><td>Parent accompanying child (RM/day)</td><td>${ch('m_par','As charged')}</td><td></td><td></td></tr><tr><td>No claims benefit (Y/N)</td><td><span class="ch">${yn('m_ncb')}<select class="hid" data-k="m_ncb_v" data-show="m_ncb" data-sv="Y"><option></option><option>RM 500 yearly</option><option>RM 1,000 yearly</option></select></span></td><td></td><td>${out('s_ncb','s')}</td></tr>`;
+m+=`<tr><td>Parent accompanying child (RM/day)</td><td>${ch('m_par','As charged')}</td><td></td><td></td></tr><tr><td>No claims benefit (Y/N)</td><td><span class="ch">${yn('m_ncb')}<select class="hid" data-k="m_ncb_v" data-show="m_ncb" data-sv="Y"><option></option><option>RM500 yearly</option><option>RM1,000 yearly</option></select></span></td><td></td><td>${out('s_ncb','s')}</td></tr>`;
 h+=sec('F','Medical coverage',`<div class="g">${fld('Insurer',inp('m_name'))}${fld('Plan name',inp('m_plan'))}${fld('Deductible / co-insurance',inp('m_ded'))}${fld('Outpatient cancer / kidney annual limit (RM)',inp('m_oplim','number'))}${fld('Renewable up to age / premium type',inp('m_renew'))}${fld('Annual medical premium (RM)',inp('m_prem','number'))}</div><div class="t" style="margin-top:8px"><table><tr><th>Benefit</th><th>Client’s plan</th><th>Suggested minimum</th><th>Status</th></tr>${m}</table></div>${rw('Medical gaps (count)','mg','s','b')}`,0);
 // G
 let g='';for(let i=0;i<10;i++)g+=`<tr><td>${inp('rs'+i,'number')}</td><td>${out('ra'+i)}</td><td>${out('rc'+i)}</td><td>${out('rg'+i)}</td><td>${out('rs_'+i,'s')}</td><td>${out('rf'+i,'p')}</td></tr>`;
@@ -200,12 +215,12 @@ h+=sec('G','Retirement need',`<div class="g">${fld('Planned retirement age',inp(
 h+=sec('H','Estate planning (will / trust)',`<div class="g">${fld('Will done? (Y/N)',yn('will'))}${fld('Will: year made / drawn up by',inp('will_d'))}${fld('Trust done? (Y/N)',yn('trust'))}${fld('Trust: type / year / trustee',inp('trust_d'))}</div><div class="r"><span>Will status</span>${out('s_will','s')}</div><div class="r"><span>Trust status</span>${out('s_trust','s')}</div>${rw('Estate planning summary','es','s','b')}`);
 // Assumptions
 const al=[['child','Child dependency age (years)'],['spouse','Years of spouse support'],['par','Years of parent / other support'],['emer','Emergency fund (months of income)'],['lifex','Life cover: multiple of annual income'],['ciy','Critical illness: years of income'],['pay','Accidental: years of income'],['rb','Medical min room & board (RM/day)'],['pre','Medical min pre-hospitalisation (days)'],['post','Medical min post-hospitalisation (days)'],['ann','Medical min annual limit (RM)'],['life','Medical min lifetime limit (RM)'],['plan','Retirement plan-to age (years)']];
-h+=sec('','Assumptions & benchmarks (editable)',`<div class="g">${al.map(([k,l])=>fld(l,inp('a_'+k,'number'))).join('')}</div><p class="n">Common rules of thumb and placeholders, not regulatory figures.</p>`,0).replace('<span class="no"></span>','');
+h+=sec('','Assumptions & benchmarks (editable)',`<div class="g">${al.map(([k,l])=>fld(l,inp('a_'+k,'number'))).join('')}</div><p class="n">Common rules of thumb and placeholders, not regulatory figures.</p>`,0).replace('<span class="no"></span>','').replace('<details class="card"','<details class="card noprint"');
 document.getElementById('app').innerHTML=h;
-document.getElementById('byg').innerHTML=fld('Name',inp('by'))+fld('Designation',inp('byt'))+fld('Contact (phone / email)',inp('byc'));
+document.getElementById('byg').innerHTML=fld('Name',inp('by'))+fld('Designation',inp('byt'))+fld('Phone',inp('byc','tel','inputmode="tel" autocomplete="tel" placeholder="e.g. 012-345 6789"'))+fld('Email',inp('bye','email','inputmode="email" autocomplete="email" placeholder="name@example.com"'));
 const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Kuala_Lumpur'});
 document.getElementById('dt').textContent=today;document.getElementById('dt2').textContent=today;
-document.querySelectorAll('[data-k]').forEach(el=>{const k=el.dataset.k;el.value=S[k]??(k.startsWith('a_')?A0[k.slice(2)]:'')});
+document.querySelectorAll('[data-k]').forEach(el=>{const v=rawM(el.dataset.k);el.value=el.dataset.m?fmtM(v):v});
 
 function lifeline(cov,need){
  const mx=Math.max(need,cov,1),x0=16,x1=584,px=y=>x0+(x1-x0)*y/mx,st=mx<=12?1:mx<=30?2:5;
@@ -227,14 +242,14 @@ function retLine(rows,y2,sa){
   s+=`<text x="${x1+8}" y="${y+10}" class="${ok?'':'nd'}">${ok?'Funded to '+Math.round(sa+y2):'Lasts to '+Math.floor(sa+r.n)}</text>`});
  return s+`<line class="lm" x1="${x1}" y1="16" x2="${x1}" y2="${H-8}"/></svg>`}
 const MS={life:{t:'Life (death / TPD)',s:'If you were no longer around',
- g:(c,d,g)=>`If you were no longer around, your loved ones could only sustain up to <b>${c.toFixed(1)} years</b> of your income. Your protection need is <b>${d.toFixed(1)} years</b>, leaving a shortfall of <b>${fm(g,'m')}</b>.`,
- o:(x,c)=>`Excellent! Your life cover of <b>${fm(x,'m')}</b> meets your protection need. Your loved ones would stay financially secure for up to <b>${c.toFixed(1)} years</b> of income even if you were no longer around. Well done on putting your family first.`},
+ g:(c,d,g)=>`If you were no longer around, your loved ones could only sustain up to <b>${c.toFixed(1)} years</b> of your income, against a protection need of <b>${d.toFixed(1)} years</b>: a shortfall of <b>${fm(g,'m')}</b>. <b>What this could mean:</b> your family may struggle to settle the home loan and other debts, keep the children’s education on track and maintain their current lifestyle, and may have to use up savings or sell assets to cope.`,
+ o:(x,c,d)=>`Excellent! Your life cover of <b>${fm(x,'m')}</b> meets your protection need${d>0?`, with a surplus of <b>${fm(d,'m')}</b>`:''}. Your loved ones would stay financially secure for up to <b>${c.toFixed(1)} years</b> of income even if you were no longer around. ${d>0?'You are ahead of the recommended level, which shows how seriously you take your family’s security. ':''}Well done on putting your family first.`},
  ci:{t:'Critical illness',s:'If you lose the ability to work through a critical illness',
- g:(c,d,g)=>`If a critical illness left you unable to work, your family could only sustain up to <b>${c.toFixed(1)} years</b> of your income. Recommended protection is <b>${d.toFixed(1)} years</b> of income, leaving a shortfall of <b>${fm(g,'m')}</b>.`,
- o:(x,c)=>`Well done! Your critical illness cover of <b>${fm(x,'m')}</b> meets the recommended ${A('ciy')} years of income. If illness kept you from working, your family would be protected for up to <b>${c.toFixed(1)} years</b>. A thoughtful safeguard for your loved ones.`},
+ g:(c,d,g)=>`If a critical illness left you unable to work, your family could only sustain up to <b>${c.toFixed(1)} years</b> of your income, against a recommended <b>${d.toFixed(1)} years</b>: a shortfall of <b>${fm(g,'m')}</b>. <b>What this could mean:</b> your income may stop while treatment costs, loan instalments and household bills carry on, so your family may have to use up savings or EPF, or take on debt, just to keep going.`,
+ o:(x,c,d)=>`Well done! Your critical illness cover of <b>${fm(x,'m')}</b> meets the recommended ${A('ciy')} years of income${d>0?`, with a surplus of <b>${fm(d,'m')}</b>`:''}. If illness kept you from working, your family would be protected for up to <b>${c.toFixed(1)} years</b>. ${d>0?'Staying ahead of the recommended level is a truly thoughtful safeguard for your loved ones.':'A thoughtful safeguard for your loved ones.'}`},
  pa:{t:'Accidental (PA)',s:'If an accident leaves you unable to work',
- g:(c,d,g)=>`If an accident left you unable to work or earn, your family could only sustain up to <b>${c.toFixed(1)} years</b> of your income. Recommended protection is <b>${d.toFixed(1)} years</b> of income, leaving a shortfall of <b>${fm(g,'m')}</b>.`,
- o:(x,c)=>`Great job! Your accidental cover of <b>${fm(x,'m')}</b> meets the recommended ${A('pay')} years of income, protecting your family for up to <b>${c.toFixed(1)} years</b> if an accident stopped you from earning. Well protected.`}};
+ g:(c,d,g)=>`If an accident left you unable to work or earn, your family could only sustain up to <b>${c.toFixed(1)} years</b> of your income, against a recommended <b>${d.toFixed(1)} years</b>: a shortfall of <b>${fm(g,'m')}</b>. <b>What this could mean:</b> your income may stop or fall sharply while medical, rehabilitation and daily living costs continue, so your family may have to use up savings, sell assets or borrow to cope.`,
+ o:(x,c,d)=>`Great job! Your accidental cover of <b>${fm(x,'m')}</b> meets the recommended ${A('pay')} years of income${d>0?`, with a surplus of <b>${fm(d,'m')}</b>`:''}, protecting your family for up to <b>${c.toFixed(1)} years</b> if an accident stopped you from earning. ${d>0?'Being ahead of the recommended level shows real care for your family. ':''}Well protected.`}};
 
 function calc(){
  O={};
@@ -262,16 +277,17 @@ function calc(){
  const emer=inc*A('emer');O.emer=emer;O.emx=inc?`${fm(inc,'m')} × ${A('emer')} months`:`monthly income × ${A('emer')} months`;O.irep=irep;O.sv=-st;
  O.nb=Math.max(0,O.net+n('fin')+n('edu')+emer+irep-st);O.xr=annual*A('lifex');O.tg=Math.max(O.nb,O.xr);
  document.getElementById('deplist').innerHTML=dp.map(x=>`<div class="r sm"><span>${esc(x.nm)} <small>(${x.r}${x.a!=null?', age '+x.a:''}) · ${fm(x.al,'m')} × 12 × ${x.y} yrs</small></span><b>${fm(x.nd,'m')}</b></div>`).join('')||'<div class="r sm"><span>No dependants listed in Part B</span><b>-</b></div>';
- const ex=dp[0];document.getElementById('depex').innerHTML=ex?`Example: ${esc(ex.nm)} → ${fm(ex.al,'m')} per month × 12 months × ${ex.y} years = <b>${fm(ex.nd,'m')}</b>. Each dependant is calculated this way and added together.`:'Example: RM 1,500 per month × 12 months × 20 years = RM 360,000. Add dependants in Part B to see each calculation.';
+ const ex=dp[0];document.getElementById('depex').innerHTML=ex?`Example: ${esc(ex.nm)} → ${fm(ex.al,'m')} per month × 12 months × ${ex.y} years = <b>${fm(ex.nd,'m')}</b>. Each dependant is calculated this way and added together.`:'Example: RM1,500 per month × 12 months × 20 years = RM360,000. Add dependants in Part B to see each calculation.';
  // E
- let cards='',gaps=0;
+ let cards='';
  [['life',O.tg],['ci',annual*A('ciy')],['pa',annual*A('pay')]].forEach(([k,nd])=>{
-  const x=n('ex_'+k),gp=Math.max(0,nd-x),cvy=annual?x/annual:0,ndy=annual?nd/annual:0;
-  O['cn_'+k]=nd;O['cg_'+k]=gp;O['cs_'+k]=nd===0?'-':x>=nd?'OK':'GAP';O['cy_'+k]=annual?cvy:'';
+  const x=n('ex_'+k),cvy=annual?x/annual:0,ndy=annual?nd/annual:0,ok=annual>0&&nd>0,df=ok?Math.round(x-nd):'';
+  O['cn_'+k]=nd;O['cd_'+k]=df;O['cy_'+k]=annual?cvy:'';
   const M=MS[k];let msg,cls='';(O.em=O.em||{});
-  if(!annual||nd===0)msg='Enter the client’s income to see this analysis.';else if(gp>0){cls='gap';msg=M.g(cvy,ndy,gp)}else{cls='ok';msg=M.o(x,cvy)}
+  if(!ok)msg='Enter the client’s income to see this analysis.';else if(df<0){cls='gap';msg=M.g(cvy,ndy,-df)}else{cls='ok';msg=M.o(x,cvy,df)}
   O.em[k]=msg.replace(/<[^>]+>/g,'');
-  cards+=`<div class="ec"><h4>${M.t}</h4><p class="sb">${M.s}</p>${annual&&nd?lifeline(cvy,ndy)+`<div class="key"><span>Covered <b>${cvy.toFixed(1)} yrs</b></span><span>Needed <b>${ndy.toFixed(1)} yrs</b></span><span>Gap <b>${fm(gp,'m')}</b></span></div>`:''}<div class="msg ${cls}">${msg}</div></div>`});
+  const dl=df<0?`<span>Shortfall <b class="gap">${fm(-df,'m')}</b></span>`:df>0?`<span>Surplus <b class="ok">${fm(df,'m')}</b></span>`:'<span><b class="ok">Fully covered</b></span>';
+  cards+=`<div class="ec"><h4>${M.t}</h4><p class="sb">${M.s}</p>${ok?lifeline(cvy,ndy)+`<div class="key"><span>Covered <b>${cvy.toFixed(1)} yrs</b></span><span>Needed <b>${ndy.toFixed(1)} yrs</b></span>${dl}</div>`:''}<div class="msg ${cls}">${msg}</div></div>`});
  document.getElementById('ecards').innerHTML=cards;
  // F
  const mb=(k,min)=>S[k]===undefined||S[k]===''?'':(n(k)>=min?'OK':'GAP');
@@ -296,26 +312,33 @@ function calc(){
  const w=S.will,t=S.trust;O.s_will=w?(w==='Y'?'OK':'GAP'):'';O.s_trust=t?(t==='Y'?'OK':'GAP'):'';
  O.es=!w&&!t?'':(!w||!t)?'Incomplete':w==='Y'&&t==='Y'?'Will & trust in place':w==='Y'?'Will only - no trust':t==='Y'?'Trust only - no will':'No will or trust';
  document.querySelectorAll('[data-show]').forEach(el=>el.classList.toggle('hid',S[el.dataset.show]!==(el.dataset.sv||'Key in amount')));
- document.querySelectorAll('[data-o]').forEach(el=>{const v=O[el.dataset.o];el.textContent=fm(v,el.dataset.f);el.classList.toggle('ok',v==='OK');el.classList.toggle('gap',v==='GAP')});
- const T=[['Life gap',fm(O.cn_life-n('ex_life')>0?O.cg_life:0,'m')||'-'],['CI gap',fm(O.cg_ci,'m')||'-'],['PA gap',fm(O.cg_pa,'m')||'-'],['Medical gaps',O.mg],['Monthly balance',fm(bal,'m')||'-'],['Estate',O.es||'-']];
- document.getElementById('tiles').innerHTML=T.map(([l,v])=>`<div class="tile"><small>${l}</small><b>${v}</b></div>`).join('');
+ document.querySelectorAll('[data-o]').forEach(el=>{const v=O[el.dataset.o],f=el.dataset.f,sd=f==='sf'||f==='sa',nm=typeof v==='number';
+  el.textContent=fm(v,f);
+  el.classList.toggle('ok',sd?(nm&&(f==='sf'?v>=0:v>0)):v==='OK');
+  el.classList.toggle('gap',sd?(nm&&v<0):v==='GAP')});
+ const tl=(w,d)=>typeof d!=='number'?[w+' cover','-','']:d<0?[w+' shortfall',fm(-d,'m'),'gap']:d>0?[w+' surplus',fm(d,'m'),'ok']:[w+' cover','Fully covered','ok'];
+ const T=[tl('Life',O.cd_life),tl('CI',O.cd_ci),tl('PA',O.cd_pa),['Medical gaps',O.mg,''],['Monthly balance',fm(bal,'m')||'-',''],['Estate',O.es||'-','']];
+ document.getElementById('tiles').innerHTML=T.map(([l,v,c])=>`<div class="tile"><small>${l}</small><b class="${c}">${v}</b></div>`).join('');
 }
-document.addEventListener('input',ev=>{const k=ev.target.dataset&&ev.target.dataset.k;if(k){S[k]=ev.target.value;save();calc()}});
+document.addEventListener('input',ev=>{const t=ev.target,k=t.dataset&&t.dataset.k;if(k){S[k]=t.dataset.m?cleanM(t.value):t.value;save();calc()}});
+document.addEventListener('focusin',ev=>{const t=ev.target;if(t.dataset&&t.dataset.m&&t.dataset.k)t.value=rawM(t.dataset.k)});
+document.addEventListener('focusout',ev=>{const t=ev.target;if(t.dataset&&t.dataset.m&&t.dataset.k)t.value=fmtM(rawM(t.dataset.k))});
 calc();
 // PDF / print
 let was=[];
-window.addEventListener('beforeprint',()=>{const d=[...document.querySelectorAll('details')];was=d.map(x=>x.open);d.forEach(x=>x.open=true);document.body.classList.toggle('hn',document.getElementById('hn').checked)});
+window.addEventListener('beforeprint',()=>{try{document.activeElement.blur()}catch(e){}const d=[...document.querySelectorAll('details')];was=d.map(x=>x.open);d.forEach(x=>x.open=true);document.body.classList.toggle('hn',document.getElementById('hn').checked)});
 window.addEventListener('afterprint',()=>{[...document.querySelectorAll('details')].forEach((x,i)=>x.open=was[i])});
 document.getElementById('pdf').onclick=()=>{try{window.print()}catch(e){}};
 document.getElementById('cp').onclick=()=>{
- const t=`Client protection summary (RM)\nPrepared for: ${S.name||'-'}  Age: ${O.age||'-'}\nAnnual income: ${fm(O.annual,'m')||'-'}\nLife target: ${fm(O.tg,'m')||'-'}  gap: ${fm(O.cg_life,'m')||'-'}\nCI gap: ${fm(O.cg_ci,'m')||'-'}  PA gap: ${fm(O.cg_pa,'m')||'-'}\nMedical gaps: ${O.mg}\nEstate: ${O.es||'-'}\nPrepared by: ${S.by||'-'}`;
+ const sd=k=>{const d=O['cd_'+k];return typeof d!=='number'?'-':d<0?'shortfall '+fm(-d,'m'):d>0?'surplus '+fm(d,'m'):'fully covered'};
+ const t=`Client protection summary (RM)\nPrepared for: ${S.name||'-'}  Age: ${O.age||'-'}\nAnnual income: ${fm(O.annual,'m')||'-'}\nLife target: ${fm(O.tg,'m')||'-'}  (${sd('life')})\nCI: ${sd('ci')}\nPA: ${sd('pa')}\nMedical gaps: ${O.mg}\nEstate: ${O.es||'-'}\nPrepared by: ${[S.by,S.byt,S.byc,S.bye].filter(Boolean).join(' · ')||'-'}`;
  const ta=document.getElementById('ta');ta.value=t;ta.style.display='block';ta.select();
- try{navigator.clipboard.writeText(t)}catch(e){}
+ try{navigator.clipboard.writeText(t).catch(()=>{})}catch(e){}
 };
 let armed=0;
 document.getElementById('clr').onclick=ev=>{
  if(!armed){armed=1;ev.target.textContent='Tap again to clear';setTimeout(()=>{armed=0;ev.target.textContent='Clear client'},4000);return}
- const keep={by:S.by,byt:S.byt,byc:S.byc};try{localStorage.setItem(KEY,JSON.stringify(keep))}catch(e){}location.reload();
+ const keep={by:S.by,byt:S.byt,byc:S.byc,bye:S.bye};try{localStorage.setItem(KEY,JSON.stringify(keep))}catch(e){}location.reload();
 };
 
 // ---------- Google Sheets: save each client as a new tab ----------
@@ -330,11 +353,11 @@ function sheetRows(incNric){
  const R=[],add=(t,c,m,p)=>R.push({t,c,m:m||[],p:p||[]}),v=x=>x===''||x==null||(typeof x==='number'&&!isFinite(x))?'':typeof x==='number'?Math.round(x*100)/100:x,
   mv=k=>S[k]===undefined||S[k]===''?'':n(k),yv=i=>mv('yr'+i);
  add('h1',['Client Protection Analysis (all amounts in RM)']);
- add('row',['Prepared for',S.name||'']);add('row',['Prepared on',today]);add('row',['Prepared by',S.by||'',S.byt||'',S.byc||'']);
+ add('row',['Prepared for',S.name||'']);add('row',['Prepared on',today]);add('row',['Prepared by',S.by||'',S.byt||'']);add('row',['Phone',S.byc||'']);add('row',['Email',S.bye||'']);
  add('row',['Saved on (MYT)',new Date().toLocaleString('en-GB',{timeZone:'Asia/Kuala_Lumpur'})]);add('blank',[]);
  add('sec',['A. CLIENT PROFILE']);
  if(incNric)add('row',['NRIC no.',S.nric||'']);
- add('row',['Date of birth (from NRIC)',O.dob]);add('row',['Age (years)',v(O.age)]);add('row',['Occupation',S.occ||'']);add('row',['Marital status',S.mar||'']);add('row',['Has financial dependants?',S.dep||'']);
+ add('row',['Date of birth',O.dob]);add('row',['Age (years)',v(O.age)]);add('row',['Occupation',S.occ||'']);add('row',['Marital status',S.mar||'']);add('row',['Has financial dependants?',S.dep||'']);
  add('row',['Monthly gross income',n('inc')],[1]);add('row',['Annual bonus / other income',n('bonus')],[1]);add('tot',['Annual income',O.annual],[1]);add('blank',[]);
  add('sec',['B. DEPENDANTS']);add('th',['Relationship','Name','Date of birth','Age','Years of support','Monthly allowance']);
  for(let i=0;i<6;i++)if(S['r'+i])add('row',[S['r'+i],S['nm'+i]||'',S['d'+i]||'',v(O['dag'+i]),v(O['dyr'+i]),n('al'+i)],[5]);
@@ -354,11 +377,11 @@ function sheetRows(incNric){
  add('blank',[]);add('sec',['D. LIFE (DEATH / TPD) NEEDS ANALYSIS']);
  add('row',['Net debts (from C.2)',O.net],[1]);add('row',['Final expenses / estate admin',n('fin')],[1]);add('row',['Children’s education fund',n('edu')],[1]);
  add('row',['Emergency fund ('+O.emx+')',O.emer],[1]);add('row',['Income replacement for dependants',O.irep],[1]);
- (O.dp||[]).forEach(x=>add('note',['     '+x.nm+' ('+x.r+(x.a!=null?', age '+x.a:'')+'): RM '+Math.round(x.al).toLocaleString('en-MY')+' × 12 × '+x.y+' yrs',x.nd],[1]));
+ (O.dp||[]).forEach(x=>add('note',['     '+x.nm+' ('+x.r+(x.a!=null?', age '+x.a:'')+'): RM'+Math.round(x.al).toLocaleString('en-MY')+' × 12 × '+x.y+' yrs',x.nd],[1]));
  add('row',['Less: savings & investments to offset (from C.1)',-O.st],[1]);add('tot',['Needs-based life requirement',O.nb],[1]);
  add('row',['Rule-of-thumb requirement ('+A('lifex')+'× annual income)',O.xr],[1]);add('tot',['Life target used (higher of the two)',O.tg],[1]);
- add('blank',[]);add('sec',['E. EXISTING COVERAGE vs NEED']);add('th',['Cover','Existing sum assured','Needed','Gap','Status','Years of income covered']);
- [['life','Life (death / TPD)'],['ci','Critical illness'],['pa','Accidental (PA)']].forEach(([k,l])=>add('row',[l,n('ex_'+k),O['cn_'+k],O['cg_'+k],O['cs_'+k],v(O['cy_'+k])],[1,2,3]));
+ add('blank',[]);add('sec',['E. EXISTING COVERAGE vs NEED']);add('th',['Cover','Existing sum assured','Needed','Shortfall (-) / surplus (+)','Status','Years of income covered']);
+ [['life','Life (death / TPD)'],['ci','Critical illness'],['pa','Accidental (PA)']].forEach(([k,l])=>add('row',[l,n('ex_'+k),O['cn_'+k],O['cd_'+k],fm(O['cd_'+k],'sf'),v(O['cy_'+k])],[1,2,3]));
  add('row',['Total annual premium, all policies',O.annprem],[1]);add('row',['Premium as % of annual income',v(O.pp)],[],[1]);
  [['life','Life'],['ci','Critical illness'],['pa','Accidental (PA)']].forEach(([k,l])=>add('note',[l+': '+((O.em||{})[k]||'')]));
  add('blank',[]);add('sec',['F. MEDICAL COVERAGE']);
