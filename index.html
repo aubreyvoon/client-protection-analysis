@@ -94,6 +94,26 @@ small{color:var(--mut)}
 .f.wide{grid-column:span 2}
 @media (max-width:600px){.by .g{grid-template-columns:1fr}.f.wide{grid-column:auto}}
 .pv{display:none}
+.x2,.xd{display:block;font:400 .84em/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;letter-spacing:0;color:var(--mut)}
+th .x2{font-size:10px;color:#c9d3e6}
+.mast .x2,.mast .xd{color:#b9c5dc;font-size:11px}
+summary .tt{display:block}
+summary .tt .x2{font-size:12px;margin-top:1px}
+h3 .x2{font-size:11px;font-weight:500;letter-spacing:.03em;margin-top:1px}
+.f .x2{font-size:11px}
+.o .xd{white-space:normal;font-size:.8em;font-weight:500;color:inherit}
+.tile small .xd{font-size:10px;letter-spacing:.02em;margin-top:1px}
+.tile b .xd{font:500 12px -apple-system,Arial,sans-serif;margin-top:2px;color:inherit}
+.tile .yr .xd{font-size:12px}
+.ec h4 .xd{font-size:12px;margin-top:1px}
+.ec .sb .xd{font-size:11px}
+.msg .xd{margin-top:7px;padding-top:7px;border-top:1px dashed rgba(128,128,128,.45);font-size:13px;color:var(--fg)}
+.key.xk{margin-top:0}
+.n .xd{margin-top:2px}
+.lg{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:15px}
+.bar2>.chk{order:9;flex:0 0 100%}
+.lg select{width:auto;padding:8px 10px;font:600 14px -apple-system,Arial,sans-serif;border-radius:10px;background:var(--card);color:var(--fg)}
+.x2[lang="zh-Hans"],.xd[lang="zh-Hans"],.key[lang="zh-Hans"]{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC","Source Han Sans SC",sans-serif!important}
 .disc{font-size:11px;color:var(--mut);margin:10px 0 0}
 button{font:600 14px -apple-system,Arial,sans-serif;padding:9px 15px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
 button.p{background:var(--nav);color:#fff;border-color:var(--nav)}
@@ -120,6 +140,36 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
  .pv+input,.pv+select{display:none!important}
  .ch .pv,.pv.nw{white-space:nowrap}
  .pv.pnv{font:600 28px var(--serif);color:#fff;border-bottom:1px solid rgba(255,255,255,.35);padding:2px 0 6px}
+ th .x2{font-size:8px}
+ body.bi{font-size:10px}
+ body.bi .x2,body.bi .xd{font-size:8.5px;line-height:1.15}
+ body.bi th .x2{font-size:7px}
+ body.bi .r .x2,body.bi td:first-child .x2,body.bi .n .x2{display:inline;margin-left:.3em}
+ body.bi .r .x2::before,body.bi td:first-child .x2::before{content:'/ '}
+ body.bi td{padding:2px 4px;font-size:10px}
+ body.bi .t td:first-child{width:42%}
+ body.bi th{padding:4px 4px}
+ body.bi .r{padding:2px 0;font-size:10px}
+ body.bi .r.t{padding:3px 8px;margin:3px 0}
+ body.bi h3{margin:7px 0 4px}
+ body.bi .ec{padding:8px 10px;margin:0 0 8px}
+ body.bi .msg{padding:6px 9px;font-size:10px;margin-top:4px}
+ body.bi .msg .xd{font-size:9.5px;margin-top:4px;padding-top:4px}
+ body.bi .tile{padding:6px}
+ body.bi summary{padding:8px 12px}
+ body.bi .mast{padding:14px 18px 10px;margin-bottom:10px}
+ body.bi .f{gap:1px}
+ body.bi td .o .xd{display:inline;margin-left:.25em}
+ body.bi td .o .xd::before{content:'/ '}
+ body.bi .ec .ll{max-height:19mm}
+ body.bi #rcard .ll{max-height:52mm}
+ body.bi #sG .t{margin-top:4px}
+ body.bi #sG .n{margin:4px 0 0}
+ body.bi td .o,body.bi td .o .xd{white-space:nowrap}
+ body.bi .x2[lang=zh-Hans],body.bi .xd[lang=zh-Hans]{font-size:9.5px}
+ body.bi th .x2[lang=zh-Hans]{font-size:8px}
+ body.bi .msg .xd[lang=zh-Hans]{font-size:10.5px}
+ body.bi input,body.bi select,body.bi .pv{font-size:11px}
  input,select{border:0!important;background:transparent!important;-webkit-appearance:none;appearance:none;padding:0!important;color:var(--fg)}
  input::placeholder{color:transparent}
  input[type=number]::-webkit-inner-spin-button{display:none}
@@ -142,6 +192,7 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
  <button id="cp">Copy summary</button>
  <button id="sv">Save to Google Sheet</button>
  <button id="clr">Clear client</button>
+ <label class="lg" title="Language"><span aria-hidden="true">🌐</span><select id="lang" aria-label="Language"><option value="en">English only</option><option value="ms">1 · English + Malay</option><option value="zh">2 · English + 中文</option></select></label>
  <label class="chk"><input type="checkbox" id="hn" checked> Hide NRIC on PDF</label>
 </div>
 <p class="tip noprint">Tip: tap Save as PDF, then choose “Save as PDF” in the print dialog (iPhone / iPad: Share ▸ Print, then pinch out on the preview). Yellow fields are inputs; everything else is calculated and saved on this device.</p>
@@ -161,7 +212,7 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
 <section class="by">
  <div class="pb">Prepared by</div>
  <div class="g" id="byg"></div>
- <p class="n">Prepared on <span id="dt2"></span></p>
+ <p class="n" id="pon"></p>
  <p class="disc">This analysis is based on the information provided and the assumptions shown. It illustrates your protection position to support planning and is not a guarantee or an offer of any product.</p>
 </section>
 <textarea id="ta"></textarea>
@@ -189,7 +240,7 @@ const cleanM=v=>String(v).replace(/[^\d.\-]/g,'');
 const fmtM=v=>{const x=parseFloat(v);return v===''||v==null||isNaN(x)?'':(x<0?'-':'')+'RM'+Math.abs(x).toLocaleString('en-MY',{maximumFractionDigits:2})};
 const rawM=k=>S[k]??(k.startsWith('a_')?A0[k.slice(2)]:'');
 const inp=(k,t='text',x='')=>MON.test(k)?`<input data-k="${k}" data-m="1" type="text" inputmode="decimal" autocomplete="off" ${/placeholder=/.test(x)?'':'placeholder="RM"'} ${x}>`:`<input data-k="${k}" type="${t}" ${t==='number'?'step="any" inputmode="decimal"':''} ${x}>`;
-const sel=(k,o)=>`<select data-k="${k}">${o.map(v=>`<option>${v}</option>`).join('')}</select>`;
+const sel=(k,o)=>`<select data-k="${k}">${o.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>`;
 const yn=k=>sel(k,['','Y','N']);
 const out=(id,f='m')=>`<b class="o" data-o="${id}" data-f="${f}"></b>`;
 const fld=(l,c,x='')=>`<label class="f ${x}"><span>${l}</span>${c}</label>`;
@@ -197,7 +248,213 @@ const fv=(l,c,x='')=>`<div class="f ${x}"><span>${l}</span>${c}</div>`;
 const rw=(l,id,f='m',b='')=>`<div class="r ${b}"><span>${l}</span>${out(id,f)}</div>`;
 const ri=(l,k)=>`<div class="r"><span>${l}</span><span class="ri">${inp(k,'number','placeholder="RM"')}</span></div>`;
 const ch=(k,o)=>`<span class="ch">${sel(k,['',o,'Key in amount'])}<input class="hid" data-k="${k}_v" data-show="${k}" type="text" data-m="1" inputmode="decimal" autocomplete="off" placeholder="RM"></span>`;
-const sec=(no,t,h,o=1)=>`<details class="card" id="s${no}" ${o?'open':''}><summary><span class="no">${no}</span>${t}</summary><div class="in">${h}</div></details>`;
+const sec=(no,t,h,o=1)=>`<details class="card" id="s${no}" ${o?'open':''}><summary><span class="no">${no}</span><span class="tt">${t}</span></summary><div class="in">${h}</div></details>`;
+
+// ---------- language: English + Malay / English + Chinese ----------
+let LANG='en';try{LANG=localStorage.getItem('cpa-lang')||'en'}catch(e){}
+if(LANG!=='ms'&&LANG!=='zh')LANG='en';
+const TR={};
+[
+// header, footer
+['Client Protection Analysis','Analisis Perlindungan Pelanggan','客户保障分析'],
+['Prepared for','Disediakan untuk','专为以下客户准备'],
+['Client’s full name (as per NRIC)','Nama penuh pelanggan (seperti dalam MyKad)','客户全名（与身份证一致）'],
+['Confidential · All amounts in RM','Sulit · Semua jumlah dalam RM','机密 · 所有金额以马币 (RM) 计'],
+['Prepared by','Disediakan oleh','制作人'],
+['Name','Nama','姓名'],['Designation','Jawatan','职称'],['Phone','Telefon','电话'],['Email','E-mel','电子邮件'],
+['This analysis is based on the information provided and the assumptions shown. It illustrates your protection position to support planning and is not a guarantee or an offer of any product.','Analisis ini berdasarkan maklumat yang diberikan dan andaian yang ditunjukkan. Ia menggambarkan kedudukan perlindungan anda bagi menyokong perancangan dan bukan jaminan atau tawaran sebarang produk.','本分析根据所提供的资料及所列假设编制，旨在说明您目前的保障状况以协助规划，并非任何保证或产品要约。'],
+// A
+['Client profile','Profil pelanggan','客户资料'],
+['NRIC no.','No. kad pengenalan (NRIC)','身份证号码'],
+['Occupation','Pekerjaan','职业'],
+['Marital status','Status perkahwinan','婚姻状况'],
+['Has financial dependants?','Ada tanggungan kewangan?','是否有经济受抚养人？'],
+['Monthly gross income (RM)','Pendapatan kasar bulanan (RM)','每月总收入 (RM)'],
+['Annual bonus / other income (RM)','Bonus tahunan / pendapatan lain (RM)','年度花红／其他收入 (RM)'],
+['Planned retirement age','Umur persaraan yang dirancang','计划退休年龄'],
+['Date of birth','Tarikh lahir','出生日期'],
+['Age (years)','Umur (tahun)','年龄（岁）'],
+['Annual income','Pendapatan tahunan','年收入'],
+// B
+['Dependants','Tanggungan','受抚养人'],
+['Relationship','Hubungan','关系'],
+['Age','Umur','年龄'],
+['Years of support','Tahun sokongan','供养年数'],
+['Monthly allowance (RM)','Elaun bulanan (RM)','每月生活费 (RM)'],
+['Support needs are calculated directly in Part D (Life needs analysis).','Keperluan sokongan dikira terus dalam Bahagian D (Analisis keperluan hayat).','供养需求直接在 D 部分（人寿需求分析）中计算。'],
+// C
+['Financial position','Kedudukan kewangan','财务状况'],
+['C.1 Savings, investments & insurance premiums','C.1 Simpanan, pelaburan & premium insurans','C.1 储蓄、投资及保险保费'],
+['Item','Perkara','项目'],
+['Monthly (RM)','Bulanan (RM)','每月 (RM)'],
+['Total to date (RM)','Jumlah setakat ini (RM)','累计总额 (RM)'],
+['Savings & investments','Simpanan & pelaburan','储蓄及投资'],
+['Savings account','Akaun simpanan','储蓄账户'],
+['Fixed deposit','Simpanan tetap','定期存款'],
+['ASB / ASM','ASB / ASM','ASB / ASM'],
+['Unit trusts / investments','Unit amanah / pelaburan','单位信托／投资'],
+['Shares / stocks','Saham','股票'],
+['Gold / other liquid assets','Emas / aset cair lain','黄金／其他流动资产'],
+['Total savings & investments','Jumlah simpanan & pelaburan','储蓄及投资总额'],
+['Insurance premiums','Premium insurans','保险保费'],
+['Monthly premium (RM)','Premium bulanan (RM)','每月保费 (RM)'],
+['Total insurance premiums','Jumlah premium insurans','保险保费总额'],
+['C.2 Debts & commitments','C.2 Hutang & komitmen','C.2 债务及承担'],
+['Outstanding (RM)','Baki tertunggak (RM)','未偿还金额 (RM)'],
+['Remaining years','Baki tahun','剩余年数'],
+['Home loan covered by MRTA/MRTT or MLTA/MLTT?','Pinjaman rumah dilindungi MRTA/MRTT atau MLTA/MLTT?','房屋贷款是否已有 MRTA/MRTT 或 MLTA/MLTT 保障？'],
+['Home loan (mortgage)','Pinjaman rumah (gadai janji)','房屋贷款（按揭）'],
+['Car loan','Pinjaman kereta','汽车贷款'],
+['Personal / education loan (e.g. PTPTN)','Pinjaman peribadi / pendidikan (cth. PTPTN)','个人／教育贷款（如 PTPTN）'],
+['Credit card, paylater (e.g. SPayLater) & other consumer debt','Kad kredit, paylater (cth. SPayLater) & hutang pengguna lain','信用卡、先买后付（如 SPayLater）及其他消费债务'],
+['Business loan / guarantor liability','Pinjaman perniagaan / liabiliti penjamin','商业贷款／担保责任'],
+['Other commitments (zakat, telco / phone instalment, electricity bills, etc.)','Komitmen lain (zakat, ansuran telco / telefon, bil elektrik, dll.)','其他承担（天课、电信／手机分期付款、电费等）'],
+['Expenses: food, groceries','Perbelanjaan: makanan, barangan runcit','开销：餐饮、杂货'],
+['Total debts (outstanding)','Jumlah hutang (tertunggak)','债务总额（未偿还）'],
+['Total monthly commitments & expenses','Jumlah komitmen & perbelanjaan bulanan','每月承担及开销总额'],
+['Less: home loan covered by MRTA/MRTT / MLTA/MLTT (auto)','Tolak: pinjaman rumah dilindungi MRTA/MRTT / MLTA/MLTT (auto)','减：已有 MRTA/MRTT／MLTA/MLTT 保障的房屋贷款（自动）'],
+['Less: other debt covered (credit-linked cover, etc.)','Tolak: hutang lain yang dilindungi (perlindungan berkaitan kredit, dll.)','减：其他已有保障的债务（信贷挂钩保障等）'],
+['Net debts to be protected','Hutang bersih untuk dilindungi','需保障的净债务'],
+['Monthly cash-flow analysis','Analisis aliran tunai bulanan','每月现金流分析'],
+['Monthly gross income','Pendapatan kasar bulanan','每月总收入'],
+['Less: monthly savings & investments (C.1)','Tolak: simpanan & pelaburan bulanan (C.1)','减：每月储蓄及投资 (C.1)'],
+['Less: monthly insurance premiums (C.1)','Tolak: premium insurans bulanan (C.1)','减：每月保险保费 (C.1)'],
+['Less: monthly debts, commitments & expenses (C.2)','Tolak: hutang, komitmen & perbelanjaan bulanan (C.2)','减：每月债务、承担及开销 (C.2)'],
+['Balance after savings, premiums & debts','Baki selepas simpanan, premium & hutang','扣除储蓄、保费及债务后的结余'],
+// D
+['Life (death / TPD) needs analysis','Analisis keperluan hayat (kematian / TPD)','人寿（身故／完全永久伤残）需求分析'],
+['Net debts (from C.2)','Hutang bersih (daripada C.2)','净债务（来自 C.2）'],
+['Final expenses / estate admin','Perbelanjaan akhir / pentadbiran harta pusaka','身后费用／遗产处理费用'],
+['Children’s education fund','Dana pendidikan anak-anak','子女教育基金'],
+['Emergency fund','Dana kecemasan','应急基金'],
+['Income replacement for dependants','Penggantian pendapatan untuk tanggungan','受抚养人收入替代'],
+['Less: savings & investments to offset (from C.1)','Tolak: simpanan & pelaburan sebagai imbangan (daripada C.1)','减：可抵销的储蓄及投资（来自 C.1）'],
+['Needs-based life requirement','Keperluan hayat berasaskan keperluan','按需求计算的人寿保额'],
+['Rule-of-thumb requirement (income × multiple)','Keperluan kaedah praktikal (pendapatan × gandaan)','经验法则保额（收入 × 倍数）'],
+['Life target used (higher of the two)','Sasaran hayat digunakan (yang lebih tinggi antara dua)','采用的人寿目标（两者取较高者）'],
+['No dependants listed in Part B','Tiada tanggungan disenaraikan dalam Bahagian B','B 部分未列出受抚养人'],
+// E
+['Existing coverage vs need','Perlindungan sedia ada berbanding keperluan','现有保障与需求对比'],
+['Cover','Perlindungan','保障'],
+['Existing sum assured (RM)','Jumlah diinsuranskan sedia ada (RM)','现有保额 (RM)'],
+['Needed (RM)','Diperlukan (RM)','所需保额 (RM)'],
+['Shortfall / surplus (RM)','Kekurangan / lebihan (RM)','缺口／盈余 (RM)'],
+['Status','Status','状态'],
+['Years of income covered','Tahun pendapatan dilindungi','保障的收入年数'],
+['Life / Total Permanent Disability','Hayat / Hilang Upaya Menyeluruh dan Kekal (TPD)','人寿／完全永久伤残 (TPD)'],
+['Critical Illness','Penyakit Kritikal','危疾'],
+['Personal Accident','Kemalangan Diri','个人意外'],
+['If you were no longer around','Jika anda tiada lagi','如果您不在了'],
+['If you lose the ability to work through a critical illness','Jika anda hilang keupayaan bekerja akibat penyakit kritikal','如果您因重大疾病失去工作能力'],
+['If an accident leaves you unable to work','Jika kemalangan menyebabkan anda tidak dapat bekerja','如果意外导致您无法工作'],
+['Total annual premium, all policies (from C.1)','Jumlah premium tahunan, semua polisi (daripada C.1)','全部保单年度保费总额（来自 C.1）'],
+['Premium as % of annual income','Premium sebagai % pendapatan tahunan','保费占年收入百分比'],
+['Protection lifeline','Garis hayat perlindungan','保障生命线'],
+// F
+['Medical coverage','Perlindungan perubatan','医疗保障'],
+['Insurer','Syarikat insurans','保险公司'],
+['Plan name','Nama pelan','计划名称'],
+['Deductible / co-insurance','Deductible / ko-insurans','自付额／共同保险'],
+['Outpatient cancer / kidney annual limit (RM)','Had tahunan pesakit luar kanser / buah pinggang (RM)','癌症／肾病门诊年度限额 (RM)'],
+['Renewable up to age / premium type','Boleh diperbaharui sehingga umur / jenis premium','可续保至年龄／保费类型'],
+['Annual medical premium (RM)','Premium perubatan tahunan (RM)','年度医疗保费 (RM)'],
+['Benefit','Faedah','保障项目'],
+['Client’s plan','Pelan pelanggan','客户的计划'],
+['Suggested minimum','Minimum dicadangkan','建议最低保障'],
+['Daily room & board (RM/day)','Bilik & makan harian (RM/hari)','每日病房及膳食 (RM/天)'],
+['Pre-hospitalisation (days)','Pra-hospital (hari)','住院前（天）'],
+['Post-hospitalisation (days)','Pasca-hospital (hari)','出院后（天）'],
+['Annual limit (RM)','Had tahunan (RM)','年度限额 (RM)'],
+['ICU (no. of days)','ICU (bilangan hari)','加护病房 ICU（天数）'],
+['Lifetime limit','Had seumur hidup','终身限额'],
+['Outpatient cancer: consultation (Y/N)','Pesakit luar kanser: konsultasi (Y/T)','癌症门诊：诊症（是/否）'],
+['Outpatient cancer: examination & tests (Y/N)','Pesakit luar kanser: pemeriksaan & ujian (Y/T)','癌症门诊：检查及化验（是/否）'],
+['Outpatient cancer: take-home drugs (Y/N)','Pesakit luar kanser: ubat bawa pulang (Y/T)','癌症门诊：带回家药物（是/否）'],
+['Outpatient kidney dialysis (Y/N)','Dialisis buah pinggang pesakit luar (Y/T)','肾脏透析门诊（是/否）'],
+['Day surgery & emergency accident outpatient (Y/N)','Pembedahan harian & pesakit luar kemalangan kecemasan (Y/T)','日间手术及意外紧急门诊（是/否）'],
+['Organ transplant (Y/N)','Pemindahan organ (Y/T)','器官移植（是/否）'],
+['Overseas treatment (Y/N)','Rawatan di luar negara (Y/T)','海外治疗（是/否）'],
+['Parent accompanying child (RM/day)','Ibu bapa menemani anak (RM/hari)','父母陪同子女 (RM/天)'],
+['No claims benefit (Y/N)','Faedah tiada tuntutan (Y/T)','无索偿优惠（是/否）'],
+['Medical gaps (count)','Jurang perubatan (bilangan)','医疗保障缺口（项数）'],
+// G
+['Retirement need','Keperluan persaraan','退休需求'],
+['Projected retirement savings at retirement (RM) – EPF / PRS / other','Unjuran simpanan persaraan semasa bersara (RM) – KWSP / PRS / lain-lain','退休时预计储蓄 (RM) – 公积金 (EPF)／PRS／其他'],
+['Inflation rate (% p.a.)','Kadar inflasi (% setahun)','通货膨胀率（每年 %）'],
+['Savings return after retirement (% p.a.)','Pulangan simpanan selepas bersara (% setahun)','退休后储蓄回报率（每年 %）'],
+['Years to retirement','Tahun sebelum bersara','距离退休年数'],
+['Years in retirement','Tahun dalam persaraan','退休年数'],
+['Monthly spending (today’s RM)','Perbelanjaan bulanan (RM hari ini)','每月开销（今日 RM）'],
+['First-year spending at retirement','Perbelanjaan tahun pertama semasa bersara','退休第一年开销'],
+['Fund needed at retirement','Dana diperlukan semasa bersara','退休时所需资金'],
+['Gap','Jurang','缺口'],
+['Funded','Dibiayai','达成率'],
+['Spending levels are editable. Fund needed = present value at retirement of annual spending, inflated to retirement and paid at the start of each year, with savings earning the return you enter. Gap shows once projected savings are keyed in.','Tahap perbelanjaan boleh diedit. Dana diperlukan = nilai kini semasa bersara bagi perbelanjaan tahunan, dinaikkan mengikut inflasi sehingga bersara dan dibayar pada awal setiap tahun, dengan simpanan memperoleh pulangan yang anda masukkan. Jurang dipaparkan setelah unjuran simpanan dimasukkan.','开销水平可自行编辑。所需资金 = 退休时按年度开销计算的现值（已按通胀调整至退休时，并于每年年初支付），储蓄按您输入的回报率增长。输入预计储蓄后即显示缺口。'],
+['Retirement lifeline','Garis hayat persaraan','退休生命线'],
+// H
+['Estate planning (will / trust)','Perancangan harta pusaka (wasiat / amanah)','遗产规划（遗嘱／信托）'],
+['Will done? (Y/N)','Wasiat dibuat? (Y/T)','已立遗嘱？（是/否）'],
+['Will: year made / drawn up by','Wasiat: tahun dibuat / disediakan oleh','遗嘱：立遗嘱年份／起草人'],
+['Trust done? (Y/N)','Amanah dibuat? (Y/T)','已设信托？（是/否）'],
+['Trust: type / year / trustee','Amanah: jenis / tahun / pemegang amanah','信托：类型／年份／受托人'],
+['Will status','Status wasiat','遗嘱状态'],
+['Trust status','Status amanah','信托状态'],
+['Estate planning summary','Ringkasan perancangan harta pusaka','遗产规划总结'],
+['Incomplete','Tidak lengkap','未完成'],
+['Will & trust in place','Wasiat & amanah telah disediakan','已有遗嘱及信托'],
+['Will only - no trust','Wasiat sahaja - tiada amanah','仅有遗嘱，没有信托'],
+['Trust only - no will','Amanah sahaja - tiada wasiat','仅有信托，没有遗嘱'],
+['No will or trust','Tiada wasiat atau amanah','没有遗嘱和信托'],
+// assumptions card
+['Assumptions & benchmarks (editable)','Andaian & penanda aras (boleh diedit)','假设与基准（可编辑）'],
+['Child dependency age (years)','Umur kebergantungan anak (tahun)','子女受抚养年龄（岁）'],
+['Years of spouse support','Tahun sokongan pasangan','供养配偶年数'],
+['Years of parent / other support','Tahun sokongan ibu bapa / lain-lain','供养父母／其他人年数'],
+['Emergency fund (months of income)','Dana kecemasan (bulan pendapatan)','应急基金（收入月数）'],
+['Life cover: multiple of annual income','Perlindungan hayat: gandaan pendapatan tahunan','人寿保障：年收入倍数'],
+['Critical illness: years of income','Penyakit kritikal: tahun pendapatan','危疾：收入年数'],
+['Accidental: years of income','Kemalangan: tahun pendapatan','意外：收入年数'],
+['Medical min room & board (RM/day)','Minimum bilik & makan perubatan (RM/hari)','医疗最低病房及膳食 (RM/天)'],
+['Medical min pre-hospitalisation (days)','Minimum pra-hospital perubatan (hari)','医疗最低住院前（天）'],
+['Medical min post-hospitalisation (days)','Minimum pasca-hospital perubatan (hari)','医疗最低出院后（天）'],
+['Medical min annual limit (RM)','Minimum had tahunan perubatan (RM)','医疗最低年度限额 (RM)'],
+['Medical min lifetime limit (RM)','Minimum had seumur hidup perubatan (RM)','医疗最低终身限额 (RM)'],
+['Retirement plan-to age (years)','Umur perancangan persaraan hingga (tahun)','退休规划至年龄（岁）'],
+['Common rules of thumb and placeholders, not regulatory figures.','Kaedah praktikal biasa dan nilai ganti, bukan angka kawal selia.','常用经验法则及占位数值，并非监管数据。'],
+// statuses and short words
+['Shortfall','Kekurangan','缺口'],['Surplus','Lebihan','盈余'],['Fully covered','Dilindungi sepenuhnya','已完全保障'],
+['OK','Memenuhi','达标'],['GAP','Jurang','缺口'],
+['Y','Ya','是'],['N','Tidak','否'],
+['Spouse','Pasangan','配偶'],['Child','Anak','子女'],['Parent','Ibu bapa','父母'],['Other','Lain-lain','其他'],
+['Single','Bujang','单身'],['Married','Berkahwin','已婚'],['Divorced','Bercerai','离异'],['Widowed','Balu / duda','丧偶'],
+['Unlimited','Tanpa had','无限额'],['Key in amount','Masukkan jumlah','输入金额'],['As charged','Seperti dicaj','按实际收费'],
+['RM500 yearly','RM500 setahun','每年 RM500'],['RM1,000 yearly','RM1,000 setahun','每年 RM1,000'],
+['Savings','Simpanan','储蓄'],['Premiums','Premium','保费'],['Commitments','Komitmen','承担'],['Balance','Baki','结余'],
+['age','umur','年龄'],['yrs','thn','年'],['months','bulan','个月']
+].forEach(([e,m,z])=>TR[e]=[m,z]);
+for(let i=1;i<=7;i++)TR[`Policy / certificate ${i} – monthly`]=[`Polisi / sijil ${i} – bulanan`,`保单／证书 ${i} – 每月`];
+const X=e=>{const t=LANG==='en'?null:TR[e];return t?t[LANG==='ms'?0:1]:''};
+const xl=(m,z)=>LANG==='ms'?m:LANG==='zh'?z:'';
+const LA=()=>LANG==='ms'?'ms':'zh-Hans';
+const xs=t=>t?`<span class="xd" lang="${LA()}">${t}</span>`:'';
+const lb=e=>LANG==='en'||!X(e)?e:e+' / '+X(e);
+const HOSTS='.eyebrow,.pf,.pb,.disc,.meta>span:last-child,#app summary .tt,#app h3,#app th,#app .f>span,.by .f>span,#app .r>span:first-child,#app td:first-child,#app p.n';
+const hostKey=el=>{if(el.matches('.r>span')){const t=[...el.childNodes].find(c=>c.nodeType===3&&c.textContent.trim());return t?t.textContent.trim():''}return el.textContent.replace(/\s+/g,' ').trim()};
+function applyLang(){
+ document.querySelectorAll('.x2').forEach(x=>x.remove());
+ document.body.dataset.lang=LANG;document.body.classList.toggle('bi',LANG!=='en');
+ document.querySelectorAll('#app option').forEach(o=>{if(!o.value)return;const t=X(o.value);o.textContent=LANG==='en'||!t?o.value:o.value+' / '+t});
+ const pn=document.querySelector('.pn'),ph='Client’s full name (as per NRIC)';pn.placeholder=LANG==='en'?ph:ph+' / '+X(ph);
+ if(LANG==='en')return;
+ document.querySelectorAll(HOSTS).forEach(el=>{
+  if(el.closest('[data-dyn]')||(el.matches('td')&&el.querySelector('input,select'))||el.querySelector(':scope>.x2'))return;
+  const t=X(hostKey(el));if(t)el.insertAdjacentHTML('beforeend',`<span class="x2" lang="${LA()}">${t}</span>`)});
+}
+function setDates(){
+ const dl=LANG==='en'?'':new Date().toLocaleDateString(LANG==='ms'?'ms-MY':'zh-CN',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Kuala_Lumpur'});
+ document.getElementById('dt').innerHTML=esc(today)+(dl&&dl!==today?xs(dl):'');
+ document.getElementById('pon').innerHTML='Prepared on '+esc(today)+(dl?xs(xl('Disediakan pada','制作日期')+' '+dl):'');
+}
 
 // A
 let h=sec('A','Client profile',`<div class="g">${fld('NRIC no.',inp('nric','text','inputmode="numeric" placeholder="e.g. 880214-13-5678"'),'nric')}${fld('Occupation',inp('occ'))}${fld('Marital status',sel('mar',['','Single','Married','Divorced','Widowed']))}${fld('Has financial dependants?',yn('dep'))}${fld('Monthly gross income (RM)',inp('inc','number'))}${fld('Annual bonus / other income (RM)',inp('bonus','number'))}${fld('Planned retirement age',inp('ret_age','number'))}${fv('Date of birth',out('dob','s'))}${fv('Age (years)',out('age','s'))}${fv('Annual income',out('annual','m'),'t')}</div>`);
@@ -215,26 +472,26 @@ const dn=['Home loan (mortgage)','Car loan','Personal / education loan (e.g. PTP
 let c2='';dn.forEach((x,i)=>c2+=i===6?`<tr><td>${x}</td><td></td><td>${inp('mo6','number')}</td><td></td><td></td></tr>`:`<tr><td>${x}</td><td>${inp('o'+i,'number')}</td><td>${inp('mo'+i,'number')}</td><td>${inp('yr'+i,'number')}</td><td>${i?'':yn('mrta')}</td></tr>`);
 h+=sec('C','Financial position',`<h3>C.1 Savings, investments & insurance premiums</h3><div class="t"><table><tr><th>Item</th><th>Monthly (RM)</th><th>Total to date (RM)</th></tr>${c1}</table></div><h3>Insurance premiums</h3><div class="t"><table><tr><th>Item</th><th>Monthly premium (RM)</th></tr>${c1b}</table></div>
 <h3 class="c2">C.2 Debts & commitments</h3><div class="t"><table><tr><th>Item</th><th>Outstanding (RM)</th><th>Monthly (RM)</th><th>Remaining years</th><th>Home loan covered by MRTA/MRTT or MLTA/MLTT?</th></tr>${c2}</table></div>${rw('Total debts (outstanding)','td','m','t')}${rw('Total monthly commitments & expenses','tm','m','b t')}${rw('Less: home loan covered by MRTA/MRTT / MLTA/MLTT (auto)','cov')}${ri('Less: other debt covered (credit-linked cover, etc.)','oc')}${rw('Net debts to be protected','net','m','b t')}
-<h3>Monthly cash-flow analysis</h3>${rw('Monthly gross income','cf_inc')}${rw('Less: monthly savings & investments (C.1)','cf_sav')}${rw('Less: monthly insurance premiums (C.1)','cf_prem')}${rw('Less: monthly debts, commitments & expenses (C.2)','cf_debt')}${rw('Balance after savings, premiums & debts','cf_bal','m','b t')}<div id="bar"></div>`);
+<h3>Monthly cash-flow analysis</h3>${rw('Monthly gross income','cf_inc')}${rw('Less: monthly savings & investments (C.1)','cf_sav')}${rw('Less: monthly insurance premiums (C.1)','cf_prem')}${rw('Less: monthly debts, commitments & expenses (C.2)','cf_debt')}${rw('Balance after savings, premiums & debts','cf_bal','m','b t')}<div id="bar" data-dyn></div>`);
 // D
-h+=sec('D','Life (death / TPD) needs analysis',`${rw('Net debts (from C.2)','net2')}${ri('Final expenses / estate admin','fin')}${ri('Children’s education fund','edu')}<div class="r"><span>Emergency fund <small data-o="emx" data-f="s"></small></span>${out('emer')}</div>
-<div class="r b t"><span>Income replacement for dependants</span>${out('irep')}</div><div id="deplist"></div><p class="n" id="depex"></p>
+h+=sec('D','Life (death / TPD) needs analysis',`${rw('Net debts (from C.2)','net2')}${ri('Final expenses / estate admin','fin')}${ri('Children’s education fund','edu')}<div class="r"><span data-dyn>Emergency fund <small data-o="emx" data-f="s"></small><span class="xd" id="emxx"></span></span>${out('emer')}</div>
+<div class="r b t"><span>Income replacement for dependants</span>${out('irep')}</div><div id="deplist" data-dyn></div><p class="n" id="depex" data-dyn></p>
 ${rw('Less: savings & investments to offset (from C.1)','sv')}${rw('Needs-based life requirement','nb','m','b t')}${rw('Rule-of-thumb requirement (income × multiple)','xr')}${rw('Life target used (higher of the two)','tg','m','b t')}`);
 // E
 const cv=[['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']];
 let e='';cv.forEach(([k,l])=>e+=`<tr><td>${l}</td><td>${inp('ex_'+k,'number')}</td><td>${out('cn_'+k)}</td><td>${out('cd_'+k,'sa')}</td><td>${out('cd_'+k,'sf')}</td><td>${out('cy_'+k,'y')}</td></tr>`);
-h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Shortfall / surplus (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div>${rw('Total annual premium, all policies (from C.1)','annprem','m','t')}${rw('Premium as % of annual income','pp','p')}<h3 class="lf">Protection lifeline</h3><div id="ecards"></div>`);
+h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Shortfall / surplus (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div>${rw('Total annual premium, all policies (from C.1)','annprem','m','t')}${rw('Premium as % of annual income','pp','p')}<h3 class="lf">Protection lifeline</h3><div id="ecards" data-dyn></div>`);
 // F
 const mr=[['Daily room & board (RM/day)','m_rb','rb','m'],['Pre-hospitalisation (days)','m_pre','pre','s'],['Post-hospitalisation (days)','m_post','post','s'],['Annual limit (RM)','m_ann','ann','m']];
 let m='';mr.forEach(([l,k,a,f])=>m+=`<tr><td>${l}</td><td>${inp(k,'number')}</td><td>${out('mn_'+a,f)}</td><td>${out('s_'+k.slice(2),'s')}</td></tr>`);
 m+=`<tr><td>ICU (no. of days)</td><td>${inp('m_icud','number')}</td><td></td><td></td></tr><tr><td>Lifetime limit</td><td>${ch('m_lt','Unlimited')}</td><td>${out('mn_life')}</td><td>${out('s_lt','s')}</td></tr>`;
 const yl=[['cc','Outpatient cancer: consultation'],['ct','Outpatient cancer: examination & tests'],['cd','Outpatient cancer: take-home drugs'],['dia','Outpatient kidney dialysis'],['day','Day surgery & emergency accident outpatient'],['org','Organ transplant'],['ovs','Overseas treatment']];
 yl.forEach(([k,l])=>m+=`<tr><td>${l} (Y/N)</td><td>${yn('m_'+k)}</td><td></td><td>${out('s_'+k,'s')}</td></tr>`);
-m+=`<tr><td>Parent accompanying child (RM/day)</td><td>${ch('m_par','As charged')}</td><td></td><td></td></tr><tr><td>No claims benefit (Y/N)</td><td><span class="ch">${yn('m_ncb')}<select class="hid" data-k="m_ncb_v" data-show="m_ncb" data-sv="Y"><option></option><option>RM500 yearly</option><option>RM1,000 yearly</option></select></span></td><td></td><td>${out('s_ncb','s')}</td></tr>`;
+m+=`<tr><td>Parent accompanying child (RM/day)</td><td>${ch('m_par','As charged')}</td><td></td><td></td></tr><tr><td>No claims benefit (Y/N)</td><td><span class="ch">${yn('m_ncb')}<select class="hid" data-k="m_ncb_v" data-show="m_ncb" data-sv="Y"><option value=""></option><option value="RM500 yearly">RM500 yearly</option><option value="RM1,000 yearly">RM1,000 yearly</option></select></span></td><td></td><td>${out('s_ncb','s')}</td></tr>`;
 h+=sec('F','Medical coverage',`<div class="g">${fld('Insurer',inp('m_name'))}${fld('Plan name',inp('m_plan'))}${fld('Deductible / co-insurance',inp('m_ded'))}${fld('Outpatient cancer / kidney annual limit (RM)',inp('m_oplim','number'))}${fld('Renewable up to age / premium type',inp('m_renew'))}${fld('Annual medical premium (RM)',inp('m_prem','number'))}</div><div class="t" style="margin-top:8px"><table><tr><th>Benefit</th><th>Client’s plan</th><th>Suggested minimum</th><th>Status</th></tr>${m}</table></div>${rw('Medical gaps (count)','mg','s','b t')}`,0);
 // G
 let g='';for(let i=0;i<10;i++)g+=`<tr><td>${inp('rs'+i,'number')}</td><td>${out('ra'+i)}</td><td>${out('rc'+i)}</td><td>${out('rg'+i)}</td><td>${out('rs_'+i,'s')}</td><td>${out('rf'+i,'p')}</td></tr>`;
-h+=sec('G','Retirement need',`<div class="g">${fld('Planned retirement age',inp('ret_age','number'))}${fld('Projected retirement savings at retirement (RM) – EPF / PRS / other',inp('ret_sav','number'))}${fld('Inflation rate (% p.a.)',inp('g_infl','number'))}${fld('Savings return after retirement (% p.a.)',inp('g_ret','number'))}</div>${rw('Years to retirement','y1','s')}${rw('Years in retirement','y2','s')}<div class="t" style="margin-top:8px"><table><tr><th>Monthly spending (today’s RM)</th><th>First-year spending at retirement</th><th>Fund needed at retirement</th><th>Gap</th><th>Status</th><th>Funded</th></tr>${g}</table></div><p class="n">Spending levels are editable. Fund needed = present value at retirement of annual spending, inflated to retirement and paid at the start of each year, with savings earning the return you enter. Gap shows once projected savings are keyed in.</p><h3>Retirement lifeline</h3><div id="rcard"></div>`,0);
+h+=sec('G','Retirement need',`<div class="g">${fld('Planned retirement age',inp('ret_age','number'))}${fld('Projected retirement savings at retirement (RM) – EPF / PRS / other',inp('ret_sav','number'))}${fld('Inflation rate (% p.a.)',inp('g_infl','number'))}${fld('Savings return after retirement (% p.a.)',inp('g_ret','number'))}</div>${rw('Years to retirement','y1','s')}${rw('Years in retirement','y2','s')}<div class="t" style="margin-top:8px"><table><tr><th>Monthly spending (today’s RM)</th><th>First-year spending at retirement</th><th>Fund needed at retirement</th><th>Gap</th><th>Status</th><th>Funded</th></tr>${g}</table></div><p class="n">Spending levels are editable. Fund needed = present value at retirement of annual spending, inflated to retirement and paid at the start of each year, with savings earning the return you enter. Gap shows once projected savings are keyed in.</p><h3>Retirement lifeline</h3><div id="rcard" data-dyn></div>`,0);
 // H
 h+=sec('H','Estate planning (will / trust)',`<div class="g">${fld('Will done? (Y/N)',yn('will'))}${fld('Will: year made / drawn up by',inp('will_d'))}${fld('Trust done? (Y/N)',yn('trust'))}${fld('Trust: type / year / trustee',inp('trust_d'))}</div><div class="r"><span>Will status</span>${out('s_will','s')}</div><div class="r"><span>Trust status</span>${out('s_trust','s')}</div>${rw('Estate planning summary','es','s','b t')}`);
 // Assumptions
@@ -243,7 +500,7 @@ h+=sec('','Assumptions & benchmarks (editable)',`<div class="g">${al.map(([k,l])
 document.getElementById('app').innerHTML=h;
 document.getElementById('byg').innerHTML=fld('Name',inp('by'))+fld('Designation',inp('byt'),'wide')+fld('Phone',inp('byc','tel','inputmode="tel" autocomplete="tel" placeholder="e.g. 012-345 6789"'))+fld('Email',inp('bye','email','inputmode="email" autocomplete="email" placeholder="name@example.com"'),'wide');
 const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Kuala_Lumpur'});
-document.getElementById('dt').textContent=today;document.getElementById('dt2').textContent=today;
+setDates();applyLang();
 document.querySelectorAll('[data-k]').forEach(el=>{const v=rawM(el.dataset.k);el.value=el.dataset.m?fmtM(v):v});
 
 function lifeline(cov,need){
@@ -251,9 +508,10 @@ function lifeline(cov,need){
  let s=`<svg viewBox="0 0 600 84" class="ll" role="img" aria-label="Years of income covered versus needed"><rect class="lt" x="${x0}" y="30" width="${x1-x0}" height="14" rx="7"/>`;
  if(cov>0)s+=`<rect class="lc" x="${x0}" y="30" width="${Math.max(8,px(cov)-x0)}" height="14" rx="7"/>`;
  if(need>cov)s+=`<rect class="lg2" x="${px(cov)}" y="30" width="${px(need)-px(cov)}" height="14"/>`;
- s+=`<line class="lm" x1="${px(need)}" y1="20" x2="${px(need)}" y2="54"/><text class="nd" x="${px(need)}" y="14" text-anchor="${px(need)>x1-70?'end':'middle'}">Need ${need.toFixed(1)} yrs</text>`;
+ const pn=px(need),bi=LANG!=='en',nx=bi?' · '+xl(`Perlu ${need.toFixed(1)} thn`,`需要 ${need.toFixed(1)} 年`):'';
+ s+=`<line class="lm" x1="${pn}" y1="20" x2="${pn}" y2="54"/><text class="nd" x="${pn}" y="14" text-anchor="${pn>x1-(bi?130:70)?'end':bi&&pn<x0+60?'start':'middle'}">Need ${need.toFixed(1)} yrs${nx}</text>`;
  for(let t=0;t<=mx;t+=st)s+=`<text x="${px(t)}" y="70" text-anchor="middle">${t}</text>`;
- return s+`<text x="${x1}" y="82" text-anchor="end">years of income</text></svg>`}
+ return s+`<text x="${x1}" y="82" text-anchor="end">years of income${LANG==='en'?'':' · '+xl('tahun pendapatan','收入年数')}</text></svg>`}
 function yrsFunded(sv,a1,rr){if(!(a1>0))return Infinity;if(Math.abs(rr)<1e-9)return sv/a1;const q=1-sv*rr/(a1*(1+rr));return q<=0?Infinity:-Math.log(q)/Math.log(1+rr)}
 function retLine(rows,y2,sa){
  const x0=84,x1=500,px=y=>x0+(x1-x0)*y/y2,st=y2<=12?1:y2<=30?2:5,H=34+rows.length*24;
@@ -263,7 +521,8 @@ function retLine(rows,y2,sa){
   s+=`<text x="78" y="${y+10}" text-anchor="end">${r.l}</text><rect class="lt" x="${x0}" y="${y}" width="${x1-x0}" height="12" rx="6"/>`;
   if(f>0)s+=`<rect class="lc" x="${x0}" y="${y}" width="${Math.max(6,px(f)-x0)}" height="12" rx="6"/>`;
   if(!ok)s+=`<rect class="lg2" x="${px(r.n)}" y="${y}" width="${px(y2)-px(r.n)}" height="12"/>`;
-  s+=`<text x="${x1+8}" y="${y+10}" class="${ok?'':'nd'}">${ok?'Funded to '+Math.round(sa+y2):'Lasts to '+Math.floor(sa+r.n)}</text>`});
+  const a=ok?Math.round(sa+y2):Math.floor(sa+r.n),t2=LANG==='en'?'':ok?xl('Dibiayai hingga '+a,'资金足够至 '+a+' 岁'):xl('Bertahan hingga '+a,'可维持至 '+a+' 岁');
+  s+=`<text x="${x1+8}" y="${y+10}" class="${ok?'':'nd'}">${ok?'Funded to '+a:'Lasts to '+a}${t2?`<tspan x="${x1+8}" dy="10" font-size="9" font-weight="400">${t2}</tspan>`:''}</text>`});
  return s+`<line class="lm" x1="${x1}" y1="16" x2="${x1}" y2="${H-8}"/></svg>`}
 const MS={life:{t:'Life / Total Permanent Disability',s:'If you were no longer around',
  g:(c,d,g)=>`If you were no longer around, your loved ones could only sustain up to <b>${c.toFixed(1)} years</b> of your income, against a protection need of <b>${d.toFixed(1)} years</b>: a shortfall of <b>${fm(g,'m')}</b>. <b>What this could mean:</b> your family may struggle to settle the home loan and other debts, keep the children’s education on track and maintain their current lifestyle, and may have to use up savings or sell assets to cope.`,
@@ -274,6 +533,21 @@ const MS={life:{t:'Life / Total Permanent Disability',s:'If you were no longer a
  pa:{t:'Personal Accident',s:'If an accident leaves you unable to work',
  g:(c,d,g)=>`If an accident left you unable to work or earn, your family could only sustain up to <b>${c.toFixed(1)} years</b> of your income, against a recommended <b>${d.toFixed(1)} years</b>: a shortfall of <b>${fm(g,'m')}</b>. <b>What this could mean:</b> your income may stop or fall sharply while medical, rehabilitation and daily living costs continue, so your family may have to use up savings, sell assets or borrow to cope.`,
  o:(x,c,d)=>`Great job! Your accidental cover of <b>${fm(x,'m')}</b> meets the recommended ${A('pay')} years of income${d>0?`, with a surplus of <b>${fm(d,'m')}</b>`:''}, protecting your family for up to <b>${c.toFixed(1)} years</b> if an accident stopped you from earning. ${d>0?'Being ahead of the recommended level shows real care for your family. ':''}Well protected.`}};
+MS.life.x={
+ g:(c,d,g)=>xl(`Jika anda tiada lagi, orang tersayang anda hanya dapat bertahan sehingga <b>${c.toFixed(1)} tahun</b> pendapatan anda, berbanding keperluan perlindungan <b>${d.toFixed(1)} tahun</b>: kekurangan sebanyak <b>${fm(g,'m')}</b>. <b>Apa maknanya:</b> keluarga anda mungkin sukar melunaskan pinjaman rumah dan hutang lain, meneruskan pendidikan anak-anak dan mengekalkan gaya hidup sedia ada, serta mungkin terpaksa menggunakan simpanan atau menjual aset untuk menampung keperluan.`,
+  `如果您不在了，您的家人只能依靠您的收入维持 <b>${c.toFixed(1)} 年</b>，而保障需求为 <b>${d.toFixed(1)} 年</b>：缺口 <b>${fm(g,'m')}</b>。<b>这可能意味着：</b>您的家人可能难以偿还房屋贷款及其他债务，难以维持子女的教育计划和现有生活水平，并可能不得不动用储蓄或变卖资产来应对。`),
+ o:(x,c,d)=>xl(`Cemerlang! Perlindungan hayat anda sebanyak <b>${fm(x,'m')}</b> memenuhi keperluan perlindungan anda${d>0?`, dengan lebihan <b>${fm(d,'m')}</b>`:''}. Orang tersayang anda akan kekal selamat dari segi kewangan sehingga <b>${c.toFixed(1)} tahun</b> pendapatan walaupun anda tiada lagi. ${d>0?'Anda mendahului tahap yang disyorkan, yang menunjukkan betapa anda mengutamakan keselamatan keluarga anda. ':''}Syabas kerana mengutamakan keluarga anda.`,
+  `太棒了！您的人寿保障 <b>${fm(x,'m')}</b> 已达到所需保障${d>0?`，并有 <b>${fm(d,'m')}</b> 的盈余`:''}。即使您不在了，家人仍可获得长达 <b>${c.toFixed(1)} 年</b>收入的经济保障。${d>0?'您的保障高于建议水平，足见您对家人安稳的重视。':''}为把家人放在第一位而点赞。`)};
+MS.ci.x={
+ g:(c,d,g)=>xl(`Jika penyakit kritikal menyebabkan anda tidak dapat bekerja, keluarga anda hanya dapat bertahan sehingga <b>${c.toFixed(1)} tahun</b> pendapatan anda, berbanding <b>${d.toFixed(1)} tahun</b> yang disyorkan: kekurangan sebanyak <b>${fm(g,'m')}</b>. <b>Apa maknanya:</b> pendapatan anda mungkin terhenti sementara kos rawatan, ansuran pinjaman dan bil rumah terus berjalan, jadi keluarga anda mungkin terpaksa menggunakan simpanan atau KWSP, atau berhutang, sekadar untuk meneruskan hidup.`,
+  `如果重大疾病导致您无法工作，您的家人只能依靠您的收入维持 <b>${c.toFixed(1)} 年</b>，而建议保障为 <b>${d.toFixed(1)} 年</b>：缺口 <b>${fm(g,'m')}</b>。<b>这可能意味着：</b>您的收入可能中断，但治疗费用、贷款分期及家庭开销仍要继续，家人可能不得不动用储蓄或公积金 (EPF)，甚至借贷才能维持生活。`),
+ o:(x,c,d)=>xl(`Syabas! Perlindungan penyakit kritikal anda sebanyak <b>${fm(x,'m')}</b> memenuhi ${A('ciy')} tahun pendapatan yang disyorkan${d>0?`, dengan lebihan <b>${fm(d,'m')}</b>`:''}. Jika penyakit menghalang anda bekerja, keluarga anda akan dilindungi sehingga <b>${c.toFixed(1)} tahun</b>. ${d>0?'Mendahului tahap yang disyorkan ialah perlindungan yang amat prihatin untuk orang tersayang anda.':'Perlindungan yang prihatin untuk orang tersayang anda.'}`,
+  `做得好！您的危疾保障 <b>${fm(x,'m')}</b> 已达到建议的 ${A('ciy')} 年收入${d>0?`，并有 <b>${fm(d,'m')}</b> 的盈余`:''}。如果疾病使您无法工作，您的家人可获得长达 <b>${c.toFixed(1)} 年</b>的保障。${d>0?'保障高于建议水平，是对家人非常周到的安排。':'这是对家人周到的守护。'}`)};
+MS.pa.x={
+ g:(c,d,g)=>xl(`Jika kemalangan menyebabkan anda tidak dapat bekerja atau mencari pendapatan, keluarga anda hanya dapat bertahan sehingga <b>${c.toFixed(1)} tahun</b> pendapatan anda, berbanding <b>${d.toFixed(1)} tahun</b> yang disyorkan: kekurangan sebanyak <b>${fm(g,'m')}</b>. <b>Apa maknanya:</b> pendapatan anda mungkin terhenti atau merosot mendadak sementara kos perubatan, pemulihan dan sara hidup harian terus berjalan, jadi keluarga anda mungkin terpaksa menggunakan simpanan, menjual aset atau berhutang untuk menampung.`,
+  `如果意外导致您无法工作或赚取收入，您的家人只能依靠您的收入维持 <b>${c.toFixed(1)} 年</b>，而建议保障为 <b>${d.toFixed(1)} 年</b>：缺口 <b>${fm(g,'m')}</b>。<b>这可能意味着：</b>在医疗、康复及日常生活开销持续的同时，您的收入可能中断或大幅减少，家人可能不得不动用储蓄、变卖资产或借贷来应对。`),
+ o:(x,c,d)=>xl(`Hebat! Perlindungan kemalangan anda sebanyak <b>${fm(x,'m')}</b> memenuhi ${A('pay')} tahun pendapatan yang disyorkan${d>0?`, dengan lebihan <b>${fm(d,'m')}</b>`:''}, melindungi keluarga anda sehingga <b>${c.toFixed(1)} tahun</b> jika kemalangan menghalang anda daripada menjana pendapatan. ${d>0?'Mendahului tahap yang disyorkan menunjukkan keprihatinan sebenar terhadap keluarga anda. ':''}Terlindung dengan baik.`,
+  `很棒！您的意外保障 <b>${fm(x,'m')}</b> 已达到建议的 ${A('pay')} 年收入${d>0?`，并有 <b>${fm(d,'m')}</b> 的盈余`:''}，如果意外使您无法赚取收入，可保障家人长达 <b>${c.toFixed(1)} 年</b>。${d>0?'保障高于建议水平，体现了您对家人的真切关爱。':''}保障周全。`)};
 
 function calc(){
  O={};
@@ -290,28 +564,32 @@ function calc(){
  O.dp=dp;
  // C.1
  let sm=0,st=0,pm=0;for(let i=0;i<6;i++){sm+=n('sm'+i);st+=n('st'+i)}for(let i=0;i<7;i++)pm+=n('pm'+i);
- O.sm=sm;O.st=st;O.pm=pm;O.pmx=pm?`${fm(pm,'m')} monthly = yearly ${fm(pm*12,'m')}`:'';O.annprem=pm*12;O.pp=annual?pm*12/annual:'';
+ O.sm=sm;O.st=st;O.pm=pm;O.pmx=pm?`${fm(pm,'m')} monthly = yearly ${fm(pm*12,'m')}`:'';O.x_pmx=pm?xl(`${fm(pm,'m')} sebulan = ${fm(pm*12,'m')} setahun`,`每月 ${fm(pm,'m')} = 每年 ${fm(pm*12,'m')}`):'';O.annprem=pm*12;O.pp=annual?pm*12/annual:'';
  // C.2
  let td=0,tm=0;for(let i=0;i<6;i++)td+=n('o'+i);for(let i=0;i<7;i++)tm+=n('mo'+i);
  O.td=td;O.tm=tm;O.cov=S.mrta==='Y'?n('o0'):0;O.net=Math.max(0,td-O.cov-n('oc'));O.net2=O.net;
  const bal=inc-sm-pm-tm;O.cf_inc=inc;O.cf_sav=-sm;O.cf_prem=-pm;O.cf_debt=-tm;O.cf_bal=bal;
  const tot=Math.max(inc,sm+pm+tm),pc=v=>tot?v/tot*100:0;
- document.getElementById('bar').innerHTML=inc>0?`<div class="stack"><i class="s1" style="width:${pc(sm)}%"></i><i class="s2" style="width:${pc(pm)}%"></i><i class="s3" style="width:${pc(tm)}%"></i><i class="s4" style="width:${pc(Math.max(0,bal))}%"></i></div><div class="lgd"><span class="s1">Savings ${Math.round(sm/inc*100)}%</span><span class="s2">Premiums ${Math.round(pm/inc*100)}%</span><span class="s3">Commitments ${Math.round(tm/inc*100)}%</span><span class="s4">Balance ${Math.round(Math.max(0,bal)/inc*100)}%</span></div>${bal<0?`<p class="n">Commitments exceed income by ${fm(-bal,'m')} a month.</p>`:''}`:'';
+ document.getElementById('bar').innerHTML=inc>0?`<div class="stack"><i class="s1" style="width:${pc(sm)}%"></i><i class="s2" style="width:${pc(pm)}%"></i><i class="s3" style="width:${pc(tm)}%"></i><i class="s4" style="width:${pc(Math.max(0,bal))}%"></i></div><div class="lgd"><span class="s1">${lb('Savings')} ${Math.round(sm/inc*100)}%</span><span class="s2">${lb('Premiums')} ${Math.round(pm/inc*100)}%</span><span class="s3">${lb('Commitments')} ${Math.round(tm/inc*100)}%</span><span class="s4">${lb('Balance')} ${Math.round(Math.max(0,bal)/inc*100)}%</span></div>${bal<0?`<p class="n">Commitments exceed income by ${fm(-bal,'m')} a month.${xs(xl(`Komitmen melebihi pendapatan sebanyak ${fm(-bal,'m')} sebulan.`,`每月承担超出收入 ${fm(-bal,'m')}。`))}</p>`:''}`:'';
  // D
- const emer=inc*A('emer');O.emer=emer;O.emx=inc?`${fm(inc,'m')} × ${A('emer')} months`:`monthly income × ${A('emer')} months`;O.irep=irep;O.sv=-st;
+ const emer=inc*A('emer');O.emer=emer;O.emx=inc?`${fm(inc,'m')} × ${A('emer')} months`:`monthly income × ${A('emer')} months`;
+ {const e=document.getElementById('emxx');e.lang=LA();e.textContent=LANG==='en'?'':xl('Dana kecemasan','应急基金')+' ('+(inc?`${fm(inc,'m')} × ${A('emer')} ${xl('bulan','个月')}`:xl(`pendapatan bulanan × ${A('emer')} bulan`,`月收入 × ${A('emer')} 个月`))+')'}O.irep=irep;O.sv=-st;
  O.nb=Math.max(0,O.net+n('fin')+n('edu')+emer+irep-st);O.xr=annual*A('lifex');O.tg=Math.max(O.nb,O.xr);
- document.getElementById('deplist').innerHTML=dp.map(x=>`<div class="r sm"><span>${esc(x.nm)} <small>(${x.r}${x.a!=null?', age '+x.a:''}) · ${fm(x.al,'m')} × 12 × ${x.y} yrs</small></span><b>${fm(x.nd,'m')}</b></div>`).join('')||'<div class="r sm"><span>No dependants listed in Part B</span><b>-</b></div>';
- const ex=dp[0];document.getElementById('depex').innerHTML=ex?`Example: ${esc(ex.nm)} → ${fm(ex.al,'m')} per month × 12 months × ${ex.y} years = <b>${fm(ex.nd,'m')}</b>. Each dependant is calculated this way and added together.`:'Example: RM1,500 per month × 12 months × 20 years = RM360,000. Add dependants in Part B to see each calculation.';
+ document.getElementById('deplist').innerHTML=dp.map(x=>`<div class="r sm"><span>${esc(x.nm)} <small>(${lb(x.r)}${x.a!=null?', '+lb('age')+' '+x.a:''}) · ${fm(x.al,'m')} × 12 × ${x.y} ${lb('yrs')}</small></span><b>${fm(x.nd,'m')}</b></div>`).join('')||`<div class="r sm"><span>No dependants listed in Part B${xs(X('No dependants listed in Part B'))}</span><b>-</b></div>`;
+ const ex=dp[0];document.getElementById('depex').innerHTML=ex?`Example: ${esc(ex.nm)} → ${fm(ex.al,'m')} per month × 12 months × ${ex.y} years = <b>${fm(ex.nd,'m')}</b>. Each dependant is calculated this way and added together.`+xs(xl(`Contoh: ${esc(ex.nm)} → ${fm(ex.al,'m')} sebulan × 12 bulan × ${ex.y} tahun = <b>${fm(ex.nd,'m')}</b>. Setiap tanggungan dikira dengan cara ini dan dijumlahkan.`,`示例：${esc(ex.nm)} → 每月 ${fm(ex.al,'m')} × 12 个月 × ${ex.y} 年 = <b>${fm(ex.nd,'m')}</b>。每位受抚养人均按此方式计算后相加。`)):'Example: RM1,500 per month × 12 months × 20 years = RM360,000. Add dependants in Part B to see each calculation.'+xs(xl('Contoh: RM1,500 sebulan × 12 bulan × 20 tahun = RM360,000. Tambah tanggungan dalam Bahagian B untuk melihat setiap pengiraan.','示例：每月 RM1,500 × 12 个月 × 20 年 = RM360,000。在 B 部分添加受抚养人即可查看每项计算。'));
  // E
  let cards='';
  [['life',O.tg],['ci',annual*A('ciy')],['pa',annual*A('pay')]].forEach(([k,nd])=>{
   const x=n('ex_'+k),cvy=annual?x/annual:0,ndy=annual?nd/annual:0,ok=annual>0&&nd>0,df=ok?Math.round(x-nd):'';
   O['cn_'+k]=nd;O['cd_'+k]=df;O['cy_'+k]=annual?cvy:'';
-  const M=MS[k];let msg,cls='';(O.em=O.em||{});
-  if(!ok)msg='Enter the client’s income to see this analysis.';else if(df<0){cls='gap';msg=M.g(cvy,ndy,-df)}else{cls='ok';msg=M.o(x,cvy,df)}
+  const M=MS[k];let msg,mx='',cls='';(O.em=O.em||{});
+  if(!ok){msg='Enter the client’s income to see this analysis.';mx=xl('Masukkan pendapatan pelanggan untuk melihat analisis ini.','请输入客户的收入以查看此分析。')}else if(df<0){cls='gap';msg=M.g(cvy,ndy,-df);mx=M.x.g(cvy,ndy,-df)}else{cls='ok';msg=M.o(x,cvy,df);mx=M.x.o(x,cvy,df)}
   O.em[k]=msg.replace(/<[^>]+>/g,'');
   const dl=df<0?`<span>Shortfall <b class="gap">${fm(-df,'m')}</b></span>`:df>0?`<span>Surplus <b class="ok">${fm(df,'m')}</b></span>`:'<span><b class="ok">Fully covered</b></span>';
-  cards+=`<div class="ec"><h4>${M.t}</h4><p class="sb">${M.s}</p>${ok?lifeline(cvy,ndy)+`<div class="key"><span>Covered <b>${cvy.toFixed(1)} yrs</b></span><span>Needed <b>${ndy.toFixed(1)} yrs</b></span>${dl}</div>`:''}<div class="msg ${cls}">${msg}</div></div>`});
+  const yx=v=>xl(`${v.toFixed(1)} thn`,`${v.toFixed(1)} 年`);
+  const dlx=!ok||LANG==='en'?'':df<0?`<span>${xl('Kekurangan','缺口')} <b class="gap">${fm(-df,'m')}</b></span>`:df>0?`<span>${xl('Lebihan','盈余')} <b class="ok">${fm(df,'m')}</b></span>`:`<span><b class="ok">${xl('Dilindungi sepenuhnya','已完全保障')}</b></span>`;
+  const kx=ok&&LANG!=='en'?`<div class="key xk" lang="${LA()}"><span>${xl('Dilindungi','已保障')} <b>${yx(cvy)}</b></span><span>${xl('Diperlukan','所需')} <b>${yx(ndy)}</b></span>${dlx}</div>`:'';
+  cards+=`<div class="ec"><h4>${M.t}${xs(X(M.t))}</h4><p class="sb">${M.s}${xs(X(M.s))}</p>${ok?lifeline(cvy,ndy)+`<div class="key"><span>Covered <b>${cvy.toFixed(1)} yrs</b></span><span>Needed <b>${ndy.toFixed(1)} yrs</b></span>${dl}</div>`+kx:''}<div class="msg ${cls}">${msg}${xs(mx)}</div></div>`});
  document.getElementById('ecards').innerHTML=cards;
  // F
  const mb=(k,min)=>S[k]===undefined||S[k]===''?'':(n(k)>=min?'OK':'GAP');
@@ -327,28 +605,33 @@ function calc(){
   const a1=parseFloat(mv)*12*fac,pv=Math.abs(rr)<1e-9?a1*y2:a1*(1-Math.pow(1+rr,-y2))/rr*(1+rr);
   O['ra'+i]=a1;O['rc'+i]=pv;O['rg'+i]=hs?Math.max(0,pv-sv):'';O['rs_'+i]=!hs?'':pv===0?'-':sv>=pv?'OK':'GAP';O['rf'+i]=hs&&pv?sv/pv:'';if(hs&&a1>0)rows.push({v:parseFloat(mv),l:fm(parseFloat(mv),'m'),n:yrsFunded(sv,a1,rr)})}
  let rh='';
- if(!hs)rh='<p class="n">Enter the projected retirement savings to see the lifeline.</p>';
- else if(!rows.length||y2<=0)rh='<p class="n">Enter a planned retirement age below the plan-to age and at least one spending level.</p>';
+ if(!hs)rh='<p class="n">Enter the projected retirement savings to see the lifeline.'+xs(xl('Masukkan unjuran simpanan persaraan untuk melihat garis hayat.','请输入预计退休储蓄以查看生命线。'))+'</p>';
+ else if(!rows.length||y2<=0)rh='<p class="n">Enter a planned retirement age below the plan-to age and at least one spending level.'+xs(xl('Masukkan umur persaraan yang dirancang di bawah umur perancangan hingga dan sekurang-kurangnya satu tahap perbelanjaan.','请输入低于规划年龄的计划退休年龄，并至少输入一个开销水平。'))+'</p>';
  else{const best=Math.max(0,...rows.filter(r=>r.n>=y2).map(r=>r.v)),end=Math.round(sa+y2);
-  rh=retLine(rows,y2,sa)+`<div class="key"><span><b style="color:var(--ok)">Green</b> = years funded</span><span><b style="color:var(--gap)">Red</b> = shortfall to age ${end}</span></div><div class="msg ${best?'ok':'gap'}">${best?`Projected savings of <b>${fm(sv,'m')}</b> can fully fund up to <b>${fm(best,'m')}</b> a month (today’s RM) until age ${end}.`:`Projected savings of <b>${fm(sv,'m')}</b> do not yet fully fund any listed monthly spending level until age ${end}.`}</div>`}
+  rh=retLine(rows,y2,sa)+`<div class="key"><span><b style="color:var(--ok)">Green</b> = years funded</span><span><b style="color:var(--gap)">Red</b> = shortfall to age ${end}</span></div>${LANG==='en'?'':`<div class="key xk" lang="${LA()}"><span><b style="color:var(--ok)">${xl('Hijau','绿色')}</b> = ${xl('tahun dibiayai','已有资金支持的年数')}</span><span><b style="color:var(--gap)">${xl('Merah','红色')}</b> = ${xl(`kekurangan sehingga umur ${end}`,`至 ${end} 岁的缺口`)}</span></div>`}<div class="msg ${best?'ok':'gap'}">${best?`Projected savings of <b>${fm(sv,'m')}</b> can fully fund up to <b>${fm(best,'m')}</b> a month (today’s RM) until age ${end}.`:`Projected savings of <b>${fm(sv,'m')}</b> do not yet fully fund any listed monthly spending level until age ${end}.`}${xs(best?xl(`Unjuran simpanan sebanyak <b>${fm(sv,'m')}</b> dapat membiayai sepenuhnya sehingga <b>${fm(best,'m')}</b> sebulan (RM hari ini) hingga umur ${end}.`,`预计储蓄 <b>${fm(sv,'m')}</b> 足以完全支持每月最高 <b>${fm(best,'m')}</b>（今日 RM）的开销，直至 ${end} 岁。`):xl(`Unjuran simpanan sebanyak <b>${fm(sv,'m')}</b> belum dapat membiayai sepenuhnya mana-mana tahap perbelanjaan bulanan yang disenaraikan sehingga umur ${end}.`,`预计储蓄 <b>${fm(sv,'m')}</b> 尚不足以完全支持所列任何每月开销水平至 ${end} 岁。`))}</div>`}
  document.getElementById('rcard').innerHTML=rh;
  // H
  const w=S.will,t=S.trust;O.s_will=w?(w==='Y'?'OK':'GAP'):'';O.s_trust=t?(t==='Y'?'OK':'GAP'):'';
  O.es=!w&&!t?'':(!w||!t)?'Incomplete':w==='Y'&&t==='Y'?'Will & trust in place':w==='Y'?'Will only - no trust':t==='Y'?'Trust only - no will':'No will or trust';
  document.querySelectorAll('[data-show]').forEach(el=>el.classList.toggle('hid',S[el.dataset.show]!==(el.dataset.sv||'Key in amount')));
  document.querySelectorAll('[data-o]').forEach(el=>{const v=O[el.dataset.o],f=el.dataset.f,sd=f==='sf'||f==='sa',nm=typeof v==='number';
-  el.textContent=fm(v,f);
+  const tx=fm(v,f);let xt='';
+  if(LANG!=='en'){if(f==='sf')xt=X(tx);else if(f==='s'&&typeof v==='string')xt=X(v)||O['x_'+el.dataset.o]||'';else if(f==='y'&&nm)xt=xl(`${v.toFixed(1)} thn`,`${v.toFixed(1)} 年`)}
+  el.innerHTML=esc(tx)+xs(xt);
   el.classList.toggle('ok',sd?(nm&&(f==='sf'?v>=0:v>0)):v==='OK');
   el.classList.toggle('gap',sd?(nm&&v<0):v==='GAP')});
- const tl=(t,k)=>{const d=O['cd_'+k],y=O['cy_'+k],ys=typeof y==='number'?y.toFixed(1)+' yrs of income':'';
-  if(typeof d!=='number')return {t,h:'-',s:'Enter income',c:''};
-  return d<0?{t,h:'Shortfall '+fm(-d,'m'),s:'Can sustain '+ys,c:'gap'}:d>0?{t,h:'Surplus '+fm(d,'m'),s:'Covered '+ys,c:'ok'}:{t,h:'Fully covered',s:'Covered '+ys,c:'ok'}};
- document.getElementById('tiles').innerHTML=[tl('Life / Total Permanent Disability','life'),tl('Critical Illness','ci'),tl('Personal Accident','pa')].map(x=>`<div class="tile"><small>${x.t}</small><b class="${x.c}">${x.h}</b><span class="yr">${x.s}</span></div>`).join('');
+ const tl=(t,k)=>{const d=O['cd_'+k],y=O['cy_'+k],ys=typeof y==='number'?y.toFixed(1)+' yrs of income':'',n1=typeof y==='number'?y.toFixed(1):'';
+  if(typeof d!=='number')return {t,h:'-',hx:'',s:'Enter income',sx:xl('Masukkan pendapatan','请输入收入'),c:''};
+  const cv=xl(`Dilindungi ${n1} tahun pendapatan`,`已保障 ${n1} 年收入`);
+  return d<0?{t,h:'Shortfall '+fm(-d,'m'),hx:LANG==='en'?'':xl('Kekurangan ','缺口 ')+fm(-d,'m'),s:'Can sustain '+ys,sx:xl(`Boleh bertahan ${n1} tahun pendapatan`,`可维持 ${n1} 年收入`),c:'gap'}:d>0?{t,h:'Surplus '+fm(d,'m'),hx:LANG==='en'?'':xl('Lebihan ','盈余 ')+fm(d,'m'),s:'Covered '+ys,sx:cv,c:'ok'}:{t,h:'Fully covered',hx:xl('Dilindungi sepenuhnya','已完全保障'),s:'Covered '+ys,sx:cv,c:'ok'}};
+ document.getElementById('tiles').innerHTML=[tl('Life / Total Permanent Disability','life'),tl('Critical Illness','ci'),tl('Personal Accident','pa')].map(x=>`<div class="tile"><small>${x.t}${xs(X(x.t))}</small><b class="${x.c}">${x.h}${xs(x.hx)}</b><span class="yr">${x.s}${xs(x.sx)}</span></div>`).join('');
 }
 document.addEventListener('input',ev=>{const t=ev.target,k=t.dataset&&t.dataset.k;if(k){const m=t.dataset.m;S[k]=m?cleanM(t.value):t.value;save();document.querySelectorAll(`[data-k="${k}"]`).forEach(o=>{if(o!==t)o.value=m?fmtM(S[k]):S[k]});calc()}});
 document.addEventListener('focusin',ev=>{const t=ev.target;if(t.dataset&&t.dataset.m&&t.dataset.k)t.value=rawM(t.dataset.k)});
 document.addEventListener('focusout',ev=>{const t=ev.target;if(t.dataset&&t.dataset.m&&t.dataset.k)t.value=fmtM(rawM(t.dataset.k))});
 calc();
+const lgs=document.getElementById('lang');lgs.value=LANG;
+lgs.onchange=()=>{LANG=lgs.value;try{localStorage.setItem('cpa-lang',LANG)}catch(e){}applyLang();setDates();calc()};
 // PDF / print
 let was=[];
 function prep(){
