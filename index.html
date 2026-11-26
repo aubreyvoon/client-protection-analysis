@@ -44,6 +44,7 @@ h3:first-child{margin-top:0}
 input,select{font:16px -apple-system,Arial,sans-serif;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--in);color:var(--inf);width:100%;min-width:0}
 .t{overflow-x:auto}
 table{border-collapse:collapse;width:100%;min-width:540px}
+table.pol{min-width:660px}
 th{background:var(--nav);color:#fff;font:600 11px -apple-system,Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;text-align:left;padding:7px 6px}
 td{border-bottom:1px solid var(--line);padding:5px 4px;font-size:14px;vertical-align:middle}
 td input,td select{padding:6px;text-align:center;text-align-last:center}
@@ -148,6 +149,8 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
  body.bi .r .x2::before,body.bi td:first-child .x2::before{content:'/ '}
  body.bi td{padding:2px 4px;font-size:10px}
  body.bi .t td:first-child{width:42%}
+ body.bi .t .pol td:first-child{width:26%}
+ body.bi .pol th{font-size:9px;padding:3px}
  body.bi th{padding:4px 4px}
  body.bi .r{padding:2px 0;font-size:10px}
  body.bi .r.t{padding:3px 8px;margin:3px 0}
@@ -224,6 +227,8 @@ let S={},O={};
 try{S=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){S={}}
 for(const k in D0)if(S[k]===undefined)S[k]=D0[k];
 for(let i=0;i<10;i++)if(S['rs'+i]===undefined)S['rs'+i]=1000*(i+1);
+// Part E existing cover used to be typed in; it is now the total of the policy rows in C.1, so carry any old entry into policy 1
+[['life','plf'],['ci','pci'],['pa','pac']].forEach(([k,p])=>{const v=S['ex_'+k];if(v===undefined)return;let t=0;for(let i=0;i<7;i++)t+=parseFloat(S[p+i])||0;if((parseFloat(v)||0)>0&&!t)S[p+'0']=v;delete S['ex_'+k]});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const n=k=>parseFloat(S[k])||0;
 const A=k=>{const v=parseFloat(S['a_'+k]);return isNaN(v)?A0[k]:v};
@@ -235,7 +240,7 @@ const fm=(v,f)=>{if(v===''||v==null||(typeof v==='number'&&!isFinite(v)))return 
  if(f==='sf')return v<0?'Shortfall':v>0?'Surplus':'Fully covered';
  if(f==='sa')return fm(Math.abs(v),'m');
  if(f==='p')return Math.round(v*100)+'%';if(f==='x2')return v.toFixed(2)+'x';if(f==='y')return v.toFixed(1)+' yrs';return String(v)};
-const MON=/^(inc|bonus|al\d|sm\d|st\d|pm\d|o\d|mo\d|oc|fin|edu|ex_(life|ci|pa)|m_rb|m_ann|m_oplim|m_prem|m_lt_v|m_par_v|ret_sav|rs\d|a_(rb|ann|life))$/;
+const MON=/^(inc|bonus|al\d|sm\d|st\d|(?:pm|plf|pci|pac|psv)\d|o\d|mo\d|oc|fin|edu|m_rb|m_ann|m_oplim|m_prem|m_lt_v|m_par_v|ret_sav|rs\d|a_(rb|ann|life))$/;
 const cleanM=v=>String(v).replace(/[^\d.\-]/g,'');
 const fmtM=v=>{const x=parseFloat(v);return v===''||v==null||isNaN(x)?'':(x<0?'-':'')+'RM'+Math.abs(x).toLocaleString('en-MY',{maximumFractionDigits:2})};
 const rawM=k=>S[k]??(k.startsWith('a_')?A0[k.slice(2)]:'');
@@ -298,6 +303,11 @@ const TR={};
 ['Total savings & investments','Jumlah simpanan & pelaburan','储蓄及投资总额'],
 ['Insurance premiums','Premium insurans','保险保费'],
 ['Monthly premium (RM)','Premium bulanan (RM)','每月保费 (RM)'],
+['Life / TPD cover (RM)','Perlindungan hayat / TPD (RM)','人寿／完全永久伤残保障 (RM)'],
+['Critical illness cover (RM)','Perlindungan penyakit kritikal (RM)','危疾保障 (RM)'],
+['Accidental cover (RM)','Perlindungan kemalangan (RM)','意外保障 (RM)'],
+['Investment / savings (RM)','Pelaburan / simpanan (RM)','投资／储蓄 (RM)'],
+['Yearly premium (monthly × 12)','Premium tahunan (bulanan × 12)','年度保费（每月 × 12）'],
 ['Total insurance premiums','Jumlah premium insurans','保险保费总额'],
 ['C.2 Debts & commitments','C.2 Hutang & komitmen','C.2 债务及承担'],
 ['Outstanding (RM)','Baki tertunggak (RM)','未偿还金额 (RM)'],
@@ -350,6 +360,8 @@ const TR={};
 ['Total annual premium, all policies (from C.1)','Jumlah premium tahunan, semua polisi (daripada C.1)','全部保单年度保费总额（来自 C.1）'],
 ['Premium as % of annual income','Premium sebagai % pendapatan tahunan','保费占年收入百分比'],
 ['Protection lifeline','Garis hayat perlindungan','保障生命线'],
+['Existing sum assured is the total of the Life, Critical illness and Accidental cover entered for each policy in C.1 (Insurance premiums).','Jumlah diinsuranskan sedia ada ialah jumlah perlindungan Hayat, Penyakit Kritikal dan Kemalangan yang dimasukkan bagi setiap polisi dalam C.1 (Premium insurans).','现有保额为 C.1（保险保费）中各保单所填人寿、危疾及意外保障金额之总和。'],
+['Investment / savings in policies (from C.1), for reference','Pelaburan / simpanan dalam polisi (daripada C.1), untuk rujukan','保单内的投资／储蓄（来自 C.1），仅供参考'],
 // F
 ['Medical coverage','Perlindungan perubatan','医疗保障'],
 ['Insurer','Syarikat insurans','保险公司'],
@@ -432,7 +444,7 @@ const TR={};
 ['Savings','Simpanan','储蓄'],['Premiums','Premium','保费'],['Commitments','Komitmen','承担'],['Balance','Baki','结余'],
 ['age','umur','年龄'],['yrs','thn','年'],['months','bulan','个月']
 ].forEach(([e,m,z])=>TR[e]=[m,z]);
-for(let i=1;i<=7;i++)TR[`Policy / certificate ${i} – monthly`]=[`Polisi / sijil ${i} – bulanan`,`保单／证书 ${i} – 每月`];
+for(let i=1;i<=7;i++)TR[`Policy / certificate ${i}`]=[`Polisi / sijil ${i}`,`保单／证书 ${i}`];
 const X=e=>{const t=LANG==='en'?null:TR[e];return t?t[LANG==='ms'?0:1]:''};
 const xl=(m,z)=>LANG==='ms'?m:LANG==='zh'?z:'';
 const LA=()=>LANG==='ms'?'ms':'zh-Hans';
@@ -466,11 +478,11 @@ const sl=['Savings account','Fixed deposit','ASB / ASM','Unit trusts / investmen
 let c1='<tr class="sub"><td colspan="3">Savings & investments</td></tr>';
 sl.forEach((x,i)=>c1+=`<tr><td>${x}</td><td>${inp('sm'+i,'number')}</td><td>${inp('st'+i,'number')}</td></tr>`);
 c1+=`<tr class="tot"><td>Total savings & investments</td><td>${out('sm')}</td><td>${out('st')}</td></tr>`;
-let c1b='';pl.forEach(i=>c1b+=`<tr><td>Policy / certificate ${i} – monthly</td><td>${inp('pm'+(i-1),'number')}</td></tr>`);
-c1b+=`<tr class="tot"><td>Total insurance premiums</td><td>${out('pmx','s')}</td></tr>`;
+let c1b='';pl.forEach(i=>{const j=i-1;c1b+=`<tr><td>Policy / certificate ${i}</td><td>${inp('pm'+j,'number')}</td><td>${inp('plf'+j,'number')}</td><td>${inp('pci'+j,'number')}</td><td>${inp('pac'+j,'number')}</td><td>${inp('psv'+j,'number')}</td></tr>`});
+c1b+=`<tr class="tot"><td>Total insurance premiums</td><td>${out('pm')}</td><td>${out('pt_life')}</td><td>${out('pt_ci')}</td><td>${out('pt_pa')}</td><td>${out('pt_sv')}</td></tr>`;
 const dn=['Home loan (mortgage)','Car loan','Personal / education loan (e.g. PTPTN)','Credit card, paylater (e.g. SPayLater) & other consumer debt','Business loan / guarantor liability','Other commitments (zakat, telco / phone instalment, electricity bills, etc.)','Expenses: food, groceries'];
 let c2='';dn.forEach((x,i)=>c2+=i===6?`<tr><td>${x}</td><td></td><td>${inp('mo6','number')}</td><td></td><td></td></tr>`:`<tr><td>${x}</td><td>${inp('o'+i,'number')}</td><td>${inp('mo'+i,'number')}</td><td>${inp('yr'+i,'number')}</td><td>${i?'':yn('mrta')}</td></tr>`);
-h+=sec('C','Financial position',`<h3>C.1 Savings, investments & insurance premiums</h3><div class="t"><table><tr><th>Item</th><th>Monthly (RM)</th><th>Total to date (RM)</th></tr>${c1}</table></div><h3>Insurance premiums</h3><div class="t"><table><tr><th>Item</th><th>Monthly premium (RM)</th></tr>${c1b}</table></div>
+h+=sec('C','Financial position',`<h3>C.1 Savings, investments & insurance premiums</h3><div class="t"><table><tr><th>Item</th><th>Monthly (RM)</th><th>Total to date (RM)</th></tr>${c1}</table></div><h3>Insurance premiums</h3><div class="t"><table class="pol"><tr><th>Item</th><th>Monthly premium (RM)</th><th>Life / TPD cover (RM)</th><th>Critical illness cover (RM)</th><th>Accidental cover (RM)</th><th>Investment / savings (RM)</th></tr>${c1b}</table></div>${rw('Yearly premium (monthly × 12)','annprem')}
 <h3 class="c2">C.2 Debts & commitments</h3><div class="t"><table><tr><th>Item</th><th>Outstanding (RM)</th><th>Monthly (RM)</th><th>Remaining years</th><th>Home loan covered by MRTA/MRTT or MLTA/MLTT?</th></tr>${c2}</table></div>${rw('Total debts (outstanding)','td','m','t')}${rw('Total monthly commitments & expenses','tm','m','b t')}${rw('Less: home loan covered by MRTA/MRTT / MLTA/MLTT (auto)','cov')}${ri('Less: other debt covered (credit-linked cover, etc.)','oc')}${rw('Net debts to be protected','net','m','b t')}
 <h3>Monthly cash-flow analysis</h3>${rw('Monthly gross income','cf_inc')}${rw('Less: monthly savings & investments (C.1)','cf_sav')}${rw('Less: monthly insurance premiums (C.1)','cf_prem')}${rw('Less: monthly debts, commitments & expenses (C.2)','cf_debt')}${rw('Balance after savings, premiums & debts','cf_bal','m','b t')}<div id="bar" data-dyn></div>`);
 // D
@@ -479,8 +491,8 @@ h+=sec('D','Life (death / TPD) needs analysis',`${rw('Net debts (from C.2)','net
 ${rw('Less: savings & investments to offset (from C.1)','sv')}${rw('Needs-based life requirement','nb','m','b t')}${rw('Rule-of-thumb requirement (income × multiple)','xr')}${rw('Life target used (higher of the two)','tg','m','b t')}`);
 // E
 const cv=[['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']];
-let e='';cv.forEach(([k,l])=>e+=`<tr><td>${l}</td><td>${inp('ex_'+k,'number')}</td><td>${out('cn_'+k)}</td><td>${out('cd_'+k,'sa')}</td><td>${out('cd_'+k,'sf')}</td><td>${out('cy_'+k,'y')}</td></tr>`);
-h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Shortfall / surplus (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div>${rw('Total annual premium, all policies (from C.1)','annprem','m','t')}${rw('Premium as % of annual income','pp','p')}<h3 class="lf">Protection lifeline</h3><div id="ecards" data-dyn></div>`);
+let e='';cv.forEach(([k,l])=>e+=`<tr><td>${l}</td><td>${out('pt_'+k)}</td><td>${out('cn_'+k)}</td><td>${out('cd_'+k,'sa')}</td><td>${out('cd_'+k,'sf')}</td><td>${out('cy_'+k,'y')}</td></tr>`);
+h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Shortfall / surplus (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div><p class="n">Existing sum assured is the total of the Life, Critical illness and Accidental cover entered for each policy in C.1 (Insurance premiums).</p>${rw('Investment / savings in policies (from C.1), for reference','pt_sv')}${rw('Total annual premium, all policies (from C.1)','annprem','m','t')}${rw('Premium as % of annual income','pp','p')}<h3 class="lf">Protection lifeline</h3><div id="ecards" data-dyn></div>`);
 // F
 const mr=[['Daily room & board (RM/day)','m_rb','rb','m'],['Pre-hospitalisation (days)','m_pre','pre','s'],['Post-hospitalisation (days)','m_post','post','s'],['Annual limit (RM)','m_ann','ann','m']];
 let m='';mr.forEach(([l,k,a,f])=>m+=`<tr><td>${l}</td><td>${inp(k,'number')}</td><td>${out('mn_'+a,f)}</td><td>${out('s_'+k.slice(2),'s')}</td></tr>`);
@@ -563,8 +575,8 @@ function calc(){
  if(S.dep==='N'){irep=0;dp=[]}
  O.dp=dp;
  // C.1
- let sm=0,st=0,pm=0;for(let i=0;i<6;i++){sm+=n('sm'+i);st+=n('st'+i)}for(let i=0;i<7;i++)pm+=n('pm'+i);
- O.sm=sm;O.st=st;O.pm=pm;O.pmx=pm?`${fm(pm,'m')} monthly = yearly ${fm(pm*12,'m')}`:'';O.x_pmx=pm?xl(`${fm(pm,'m')} sebulan = ${fm(pm*12,'m')} setahun`,`每月 ${fm(pm,'m')} = 每年 ${fm(pm*12,'m')}`):'';O.annprem=pm*12;O.pp=annual?pm*12/annual:'';
+ let sm=0,st=0,pm=0;const pt={life:0,ci:0,pa:0,sv:0};for(let i=0;i<6;i++){sm+=n('sm'+i);st+=n('st'+i)}for(let i=0;i<7;i++){pm+=n('pm'+i);pt.life+=n('plf'+i);pt.ci+=n('pci'+i);pt.pa+=n('pac'+i);pt.sv+=n('psv'+i)}
+ O.sm=sm;O.st=st;O.pm=pm;O.pt_life=pt.life;O.pt_ci=pt.ci;O.pt_pa=pt.pa;O.pt_sv=pt.sv;O.annprem=pm*12;O.pp=annual?pm*12/annual:'';
  // C.2
  let td=0,tm=0;for(let i=0;i<6;i++)td+=n('o'+i);for(let i=0;i<7;i++)tm+=n('mo'+i);
  O.td=td;O.tm=tm;O.cov=S.mrta==='Y'?n('o0'):0;O.net=Math.max(0,td-O.cov-n('oc'));O.net2=O.net;
@@ -580,7 +592,7 @@ function calc(){
  // E
  let cards='';
  [['life',O.tg],['ci',annual*A('ciy')],['pa',annual*A('pay')]].forEach(([k,nd])=>{
-  const x=n('ex_'+k),cvy=annual?x/annual:0,ndy=annual?nd/annual:0,ok=annual>0&&nd>0,df=ok?Math.round(x-nd):'';
+  const x=O['pt_'+k],cvy=annual?x/annual:0,ndy=annual?nd/annual:0,ok=annual>0&&nd>0,df=ok?Math.round(x-nd):'';
   O['cn_'+k]=nd;O['cd_'+k]=df;O['cy_'+k]=annual?cvy:'';
   const M=MS[k];let msg,mx='',cls='';(O.em=O.em||{});
   if(!ok){msg='Enter the client’s income to see this analysis.';mx=xl('Masukkan pendapatan pelanggan untuk melihat analisis ini.','请输入客户的收入以查看此分析。')}else if(df<0){cls='gap';msg=M.g(cvy,ndy,-df);mx=M.x.g(cvy,ndy,-df)}else{cls='ok';msg=M.o(x,cvy,df);mx=M.x.o(x,cvy,df)}
@@ -682,9 +694,9 @@ function sheetRows(incNric){
  add('sub',['C.1 Savings & investments']);add('th',['Item','Monthly','Total to date']);
  sl.forEach((x,i)=>{if(S['sm'+i]||S['st'+i])add('row',[x,n('sm'+i),n('st'+i)],[1,2])});
  add('tot',['Total savings & investments',O.sm,O.st],[1,2]);
- add('sub',['Insurance premiums']);add('th',['Item','Monthly premium']);
- for(let i=0;i<7;i++)if(S['pm'+i])add('row',['Policy / certificate '+(i+1),n('pm'+i)],[1]);
- add('tot',['Total insurance premiums (monthly)',O.pm],[1]);add('row',['Total insurance premiums (yearly)',O.pm*12],[1]);
+ add('sub',['Insurance premiums']);add('th',['Item','Monthly premium','Life / TPD cover','Critical illness cover','Accidental cover','Investment / savings']);
+ for(let i=0;i<7;i++)if(['pm','plf','pci','pac','psv'].some(p=>S[p+i]))add('row',['Policy / certificate '+(i+1),n('pm'+i),n('plf'+i),n('pci'+i),n('pac'+i),n('psv'+i)],[1,2,3,4,5]);
+ add('tot',['Total insurance premiums / cover (all policies)',O.pm,O.pt_life,O.pt_ci,O.pt_pa,O.pt_sv],[1,2,3,4,5]);add('row',['Total insurance premiums (yearly)',O.pm*12],[1]);
  add('sub',['C.2 Debts & commitments']);add('th',['Item','Outstanding','Monthly','Remaining years','Home loan covered by MRTA/MLTA?']);
  dn.forEach((x,i)=>{if(S['o'+i]||S['mo'+i]||(i===0&&S.mrta))add('row',[x,i===6?'':n('o'+i),n('mo'+i),i===6?'':yv(i),i?'':S.mrta||''],[1,2])});
  add('tot',['Total debts / total monthly commitments & expenses',O.td,O.tm],[1,2]);
@@ -698,8 +710,8 @@ function sheetRows(incNric){
  add('row',['Less: savings & investments to offset (from C.1)',-O.st],[1]);add('tot',['Needs-based life requirement',O.nb],[1]);
  add('row',['Rule-of-thumb requirement ('+A('lifex')+'× annual income)',O.xr],[1]);add('tot',['Life target used (higher of the two)',O.tg],[1]);
  add('blank',[]);add('sec',['E. EXISTING COVERAGE vs NEED']);add('th',['Cover','Existing sum assured','Needed','Shortfall (-) / surplus (+)','Status','Years of income covered']);
- [['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']].forEach(([k,l])=>add('row',[l,n('ex_'+k),O['cn_'+k],O['cd_'+k],fm(O['cd_'+k],'sf'),v(O['cy_'+k])],[1,2,3]));
- add('row',['Total annual premium, all policies',O.annprem],[1]);add('row',['Premium as % of annual income',v(O.pp)],[],[1]);
+ [['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']].forEach(([k,l])=>add('row',[l,O['pt_'+k],O['cn_'+k],O['cd_'+k],fm(O['cd_'+k],'sf'),v(O['cy_'+k])],[1,2,3]));
+ add('row',['Investment / savings in policies (from C.1), for reference',O.pt_sv],[1]);add('row',['Total annual premium, all policies',O.annprem],[1]);add('row',['Premium as % of annual income',v(O.pp)],[],[1]);
  [['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']].forEach(([k,l])=>add('note',[l+': '+((O.em||{})[k]||'')]));
  add('blank',[]);add('sec',['F. MEDICAL COVERAGE']);
  add('row',['Insurer',S.m_name||'']);add('row',['Plan name',S.m_plan||'']);add('row',['Deductible / co-insurance',S.m_ded||'']);add('row',['Outpatient cancer / kidney annual limit',mv('m_oplim')],[1]);add('row',['Renewable up to age / premium type',S.m_renew||'']);add('row',['Annual medical premium',mv('m_prem')],[1]);
