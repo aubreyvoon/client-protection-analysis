@@ -200,6 +200,7 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
  <button class="p" id="pdf">Save as PDF</button>
  <button id="cp">Copy summary</button>
  <button id="sv">Save to Google Sheet</button>
+ <button id="ld">Open client</button>
  <button id="clr">Clear client</button>
  <label class="lg" title="Language"><span aria-hidden="true">🌐</span><select id="lang" aria-label="Language"><option value="en">English only</option><option value="ms">1 · English + Malay</option><option value="zh">2 · English + 中文</option></select></label>
  <label class="chk"><input type="checkbox" id="hn" checked> Hide NRIC on PDF</label>
@@ -215,6 +216,12 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
  <label class="chk"><input type="checkbox" id="gn" checked> Include NRIC when saving to the sheet</label>
  <p class="n">Each save adds a new tab named after the client, with the full analysis shown on this page. These settings are kept only on this device.</p>
  <div class="bar2"><button id="gt">Test connection</button><button id="go">Open my sheet</button></div>
+</div></details>
+<details class="card noprint" id="lc"><summary>Open a saved client</summary><div class="in">
+ <label class="f"><span>Search by name</span><input id="lq" type="search" autocomplete="off" placeholder="Type part of the client’s name"></label>
+ <div id="ll"></div>
+ <p class="n">Lists the clients saved from this app to your sheet, newest first. Opening one replaces the form on this device. Your sheet is not changed until you save again, and saving always adds a new tab. Clients saved before this feature was added cannot be opened; save them again once.</p>
+ <div class="bar2"><button id="lr">Refresh list</button></div>
 </div></details>
 <div class="tiles" id="tiles"></div>
 <div id="app"></div>
@@ -455,8 +462,9 @@ const TR={};
 ['EPF dividend rate (% p.a.) – 2025: 6.15%','Kadar dividen KWSP (% setahun) – 2025: 6.15%','公积金（EPF）股息率（每年 %）——2025 年：6.15%'],
 ['Client contributes to EPF','Klien mencarum KWSP','客户缴纳公积金（EPF）'],
 ['Monthly EPF contribution – 24% (employer 13% + employee 11%)','Caruman KWSP bulanan – 24% (majikan 13% + pekerja 11%)','每月公积金缴款——24%（雇主 13% + 员工 11%）'],
+['Monthly EPF contribution – 23% (employer 12% + employee 11%)','Caruman KWSP bulanan – 23% (majikan 12% + pekerja 11%)','每月公积金缴款——23%（雇主 12% + 员工 11%）'],
 ['Projected EPF savings at retirement','Unjuran simpanan KWSP semasa bersara','退休时预计公积金储蓄'],
-['EPF projection: the balance now grows at the EPF dividend rate above (default 6.15%, the rate declared for 2025; past rates do not guarantee future ones). If the client contributes, 24% of monthly gross income (employer 13% + employee 11%) is added each month until age 60, or the planned retirement age if earlier; if the box is not ticked, no contributions are added. The employer share is 12% for monthly wages above RM5,000. Salary is held constant. Estimate only, not an EPF statement.','Unjuran KWSP: baki sekarang berkembang pada kadar dividen KWSP di atas (lalai 6.15%, kadar yang diisytiharkan bagi 2025; kadar lalu tidak menjamin kadar akan datang). Jika klien mencarum, 24% daripada pendapatan kasar bulanan (majikan 13% + pekerja 11%) ditambah setiap bulan sehingga umur 60, atau umur persaraan yang dirancang jika lebih awal; jika kotak tidak ditanda, tiada caruman ditambah. Bahagian majikan ialah 12% bagi gaji bulanan melebihi RM5,000. Gaji dianggap tetap. Anggaran sahaja, bukan penyata KWSP.','公积金（EPF）预测：现有结余按上述公积金股息率增长（默认 6.15%，即 2025 年宣布的股息率；过往股息率不保证未来表现）。若客户有缴款，则按每月总收入的 24%（雇主 13% + 员工 11%）逐月加入，直至 60 岁或计划退休年龄（以较早者为准）；未勾选则不计入任何缴款。月薪超过 RM5,000 时，雇主缴款比例为 12%。薪金视为不变。仅为估算，并非公积金报表。'],
+['EPF projection: the balance now grows at the EPF dividend rate above (default 6.15%, the rate declared for 2025; past rates do not guarantee future ones). If the client contributes, the employee share (11%) and the employer share (13% for monthly wages up to RM5,000, 12% above) of monthly gross income are added each month until age 60, or the planned retirement age if earlier; if the box is not ticked, no contributions are added. Salary is held constant. Estimate only, not an EPF statement.','Unjuran KWSP: baki sekarang berkembang pada kadar dividen KWSP di atas (lalai 6.15%, kadar yang diisytiharkan bagi 2025; kadar lalu tidak menjamin kadar akan datang). Jika klien mencarum, bahagian pekerja (11%) dan bahagian majikan (13% bagi gaji bulanan sehingga RM5,000, 12% selebihnya) daripada pendapatan kasar bulanan ditambah setiap bulan sehingga umur 60, atau umur persaraan yang dirancang jika lebih awal; jika kotak tidak ditanda, tiada caruman ditambah. Gaji dianggap tetap. Anggaran sahaja, bukan penyata KWSP.','公积金（EPF）预测：现有结余按上述公积金股息率增长（默认 6.15%，即 2025 年宣布的股息率；过往股息率不保证未来表现）。若客户有缴款，则按每月总收入逐月加入员工缴款（11%）和雇主缴款（月薪不超过 RM5,000 为 13%，超过则为 12%），直至 60 岁或计划退休年龄（以较早者为准）；未勾选则不计入任何缴款。薪金视为不变。仅为估算，并非公积金报表。'],
 ['Income tax and EPF figures are estimates only, based on the rates and assumptions stated; they are not a tax filing or an EPF statement.','Angka cukai pendapatan dan KWSP hanyalah anggaran, berdasarkan kadar dan andaian yang dinyatakan; ia bukan penyerahan borang cukai atau penyata KWSP.','所得税及公积金（EPF）数字仅为估算，依据所列税率及假设，并非报税或公积金报表。'],
 ['Tax relief: individual (RM)','Pelepasan cukai: individu (RM)','税务减免：个人 (RM)'],
 ['Tax relief cap: EPF (RM)','Had pelepasan cukai: KWSP (RM)','税务减免上限：公积金 (RM)'],
@@ -533,7 +541,7 @@ m+=`<tr><td>Parent accompanying child (RM/day)</td><td>${ch('m_par','As charged'
 h+=sec('F','Medical coverage',`<div class="g">${fld('Insurer',inp('m_name'))}${fld('Plan name',inp('m_plan'))}${fld('Deductible / co-insurance',inp('m_ded'))}${fld('Outpatient cancer / kidney annual limit (RM)',inp('m_oplim','number'))}${fld('Renewable up to age / premium type',inp('m_renew'))}${fld('Annual medical premium (RM)',inp('m_prem','number'))}</div><div class="t" style="margin-top:8px"><table><tr><th>Benefit</th><th>Client’s plan</th><th>Suggested minimum</th><th>Status</th></tr>${m}</table></div>${rw('Medical gaps (count)','mg','s','b t')}`,0);
 // G
 let g='';for(let i=0;i<10;i++)g+=`<tr><td>${inp('rs'+i,'number')}</td><td>${out('ra'+i)}</td><td>${out('rc'+i)}</td><td>${out('rg'+i)}</td><td>${out('rs_'+i,'s')}</td><td>${out('rf'+i,'p')}</td></tr>`;
-h+=sec('G','Retirement need',`<div class="g">${fld('Planned retirement age',inp('ret_age','number'))}${fld('EPF balance now (RM)',inp('epf_bal','number'))}${fld('EPF dividend rate (% p.a.) – 2025: 6.15%',inp('a_epf_r','number'))}<label class="f ck"><span>Client contributes to EPF</span><input type="checkbox" id="epft"></label>${fv('Monthly EPF contribution – 24% (employer 13% + employee 11%)',out('epf_mcs','s'),'em')}${fv('Projected EPF savings at retirement',out('epf_fv','m'),'t ep')}${fld('Inflation rate (% p.a.)',inp('g_infl','number'))}${fld('Savings return after retirement (% p.a.)',inp('g_ret','number'))}</div><p class="n noprint">EPF projection: the balance now grows at the EPF dividend rate above (default 6.15%, the rate declared for 2025; past rates do not guarantee future ones). If the client contributes, 24% of monthly gross income (employer 13% + employee 11%) is added each month until age 60, or the planned retirement age if earlier; if the box is not ticked, no contributions are added. The employer share is 12% for monthly wages above RM5,000. Salary is held constant. Estimate only, not an EPF statement.</p>${rw('Years to retirement','y1','s')}${rw('Years in retirement','y2','s')}<div class="t" style="margin-top:8px"><table><tr><th>Monthly spending (today’s RM)</th><th>First-year spending at retirement</th><th>Fund needed at retirement</th><th>Gap</th><th>Status</th><th>Funded</th></tr>${g}</table></div><p class="n">Spending levels are editable. Fund needed = present value at retirement of annual spending, inflated to retirement and paid at the start of each year, with savings earning the return you enter. Gap shows once the EPF balance is keyed in or EPF contributions are ticked.</p><h3>Retirement lifeline</h3><div id="rcard" data-dyn></div>`,0);
+h+=sec('G','Retirement need',`<div class="g">${fld('Planned retirement age',inp('ret_age','number'))}${fld('EPF balance now (RM)',inp('epf_bal','number'))}${fld('EPF dividend rate (% p.a.) – 2025: 6.15%',inp('a_epf_r','number'))}<label class="f ck"><span>Client contributes to EPF</span><input type="checkbox" id="epft"></label><div class="f em"><span class="e13">Monthly EPF contribution – 24% (employer 13% + employee 11%)</span><span class="e12 hid">Monthly EPF contribution – 23% (employer 12% + employee 11%)</span>${out('epf_mcs','s')}</div>${fv('Projected EPF savings at retirement',out('epf_fv','m'),'t ep')}${fld('Inflation rate (% p.a.)',inp('g_infl','number'))}${fld('Savings return after retirement (% p.a.)',inp('g_ret','number'))}</div><p class="n noprint">EPF projection: the balance now grows at the EPF dividend rate above (default 6.15%, the rate declared for 2025; past rates do not guarantee future ones). If the client contributes, the employee share (11%) and the employer share (13% for monthly wages up to RM5,000, 12% above) of monthly gross income are added each month until age 60, or the planned retirement age if earlier; if the box is not ticked, no contributions are added. Salary is held constant. Estimate only, not an EPF statement.</p>${rw('Years to retirement','y1','s')}${rw('Years in retirement','y2','s')}<div class="t" style="margin-top:8px"><table><tr><th>Monthly spending (today’s RM)</th><th>First-year spending at retirement</th><th>Fund needed at retirement</th><th>Gap</th><th>Status</th><th>Funded</th></tr>${g}</table></div><p class="n">Spending levels are editable. Fund needed = present value at retirement of annual spending, inflated to retirement and paid at the start of each year, with savings earning the return you enter. Gap shows once the EPF balance is keyed in or EPF contributions are ticked.</p><h3>Retirement lifeline</h3><div id="rcard" data-dyn></div>`,0);
 // H
 h+=sec('H','Estate planning (will / trust)',`<div class="g">${fld('Will done? (Y/N)',yn('will'))}${fld('Will: year made / drawn up by',inp('will_d'))}${fld('Trust done? (Y/N)',yn('trust'))}${fld('Trust: type / year / trustee',inp('trust_d'))}</div><div class="r"><span>Will status</span>${out('s_will','s')}</div><div class="r"><span>Trust status</span>${out('s_trust','s')}</div>${rw('Estate planning summary','es','s','b t')}`);
 // Assumptions
@@ -651,11 +659,11 @@ function calc(){
  O.s_ncb=S.m_ncb?(S.m_ncb==='Y'?'OK':'GAP'):'';O.mg=['rb','pre','post','ann','lt','ncb',...yl.map(x=>x[0])].filter(k=>O['s_'+k]==='GAP').length;
  // G
  const ra=n('ret_age'),inf=n('g_infl')/100,rt=n('g_ret')/100,y1=ag==null?0:Math.max(0,ra-ag),y2=Math.max(0,A('plan')-Math.max(ra,ag==null?0:ag)),fac=Math.pow(1+inf,y1),rr=(1+rt)/(1+inf)-1,hb=S.epf_bal!==undefined&&S.epf_bal!=='',on=S.epf_on==='1',hs=hb||on;
- // EPF: balance now grows at the EPF dividend rate; only if the client contributes, 24% of monthly gross income (employer 13% + employee 11%) is added each month until age 60 or the planned retirement age if earlier
- let epf=0,emc=0,emr=0,eme=0;if(hs){const er=A('epf_r')/100,rm=Math.pow(1+er,1/12)-1,cm=on&&ag!=null?Math.round(Math.max(0,Math.min(ra,60)-ag)*12):0;emr=on?inc*13/100:0;eme=on?inc*11/100:0;emc=emr+eme;
+ // EPF: balance now grows at the EPF dividend rate; only if the client contributes, employee 11% + employer 13% (12% if monthly wages are above RM5,000) of monthly gross income is added each month until age 60 or the planned retirement age if earlier
+ let epf=0,emc=0,emr=0,eme=0,erp=inc>5000?12:13;if(hs){const er=A('epf_r')/100,rm=Math.pow(1+er,1/12)-1,cm=on&&ag!=null?Math.round(Math.max(0,Math.min(ra,60)-ag)*12):0;emr=on?inc*erp/100:0;eme=on?inc*11/100:0;emc=emr+eme;
   epf=n('epf_bal')*Math.pow(1+er,y1)+emc*(Math.abs(rm)<1e-12?cm:(Math.pow(1+rm,cm)-1)/rm)*Math.pow(1+er,y1-cm/12)}
- const sv=epf;O.epf_hb=hs;O.epf_on=on;O.epf_mc=on?emc:'';O.epf_mr=on?emr:'';O.epf_me=on?eme:'';O.epf_mcs=on?(emc>0?fm(emc,'m')+' = '+fm(emr,'m')+' + '+fm(eme,'m'):'-'):'';O.epf_fv=hs?epf:'';
- document.querySelectorAll('.ep').forEach(el=>el.classList.toggle('hid',!hs));document.querySelectorAll('.em').forEach(el=>el.classList.toggle('hid',!on));
+ const sv=epf;O.epf_hb=hs;O.epf_on=on;O.epf_mc=on?emc:'';O.epf_mr=on?emr:'';O.epf_me=on?eme:'';O.epf_erp=erp;O.epf_mcs=on?(emc>0?fm(emc,'m')+' = '+fm(emr,'m')+' + '+fm(eme,'m'):'-'):'';O.epf_fv=hs?epf:'';
+ document.querySelectorAll('.ep').forEach(el=>el.classList.toggle('hid',!hs));document.querySelectorAll('.em').forEach(el=>el.classList.toggle('hid',!on));document.querySelectorAll('.e12').forEach(el=>el.classList.toggle('hid',erp!==12));document.querySelectorAll('.e13').forEach(el=>el.classList.toggle('hid',erp!==13));
  O.y1=y1;O.y2=y2;O.fac=fac;const rows=[],sa=Math.max(ra,ag==null?0:ag);
  for(let i=0;i<10;i++){const mv=S['rs'+i];if(mv===''||mv==null){['ra','rc','rg','rs_','rf'].forEach(p=>O[p+i]='');continue}
   const a1=parseFloat(mv)*12*fac,pv=Math.abs(rr)<1e-9?a1*y2:a1*(1-Math.pow(1+rr,-y2))/rr*(1+rr);
@@ -773,7 +781,7 @@ function sheetRows(incNric){
  add('tot',['Medical gaps (count)',O.mg]);
  add('blank',[]);add('sec',['G. RETIREMENT NEED']);
  add('row',['Planned retirement age',n('ret_age')]);if(S.epf_bal!==undefined&&S.epf_bal!=='')add('row',['EPF balance now',mv('epf_bal')],[1]);add('row',['EPF dividend rate (% p.a.)',A('epf_r')+'%']);add('row',['Client contributes to EPF',O.epf_on?'Yes':'No']);
- if(O.epf_on){add('row',['Monthly EPF contribution (24% of monthly gross income)',O.epf_mc],[1]);add('row',['Employer share (13%)',O.epf_mr],[1]);add('row',['Employee share (11%)',O.epf_me],[1])}
+ if(O.epf_on){add('row',['Monthly EPF contribution ('+(O.epf_erp+11)+'% of monthly gross income)',O.epf_mc],[1]);add('row',['Employer share ('+O.epf_erp+'%)',O.epf_mr],[1]);add('row',['Employee share (11%)',O.epf_me],[1])}
  if(O.epf_hb)add('tot',['Projected EPF savings at retirement',O.epf_fv],[1]);
  add('row',['Inflation rate (% p.a.)',n('g_infl')/100],[],[1]);add('row',['Savings return after retirement (% p.a.)',n('g_ret')/100],[],[1]);
  add('row',['Years to retirement',v(O.y1)]);add('row',['Years in retirement',v(O.y2)]);
@@ -786,7 +794,7 @@ function sheetRows(incNric){
 gv('gt').onclick=async()=>{
  if(!okUrl(G.url)||!G.key){msg('Enter the web app URL (ending /exec) and the secret key first.',1);return}
  msg('Testing…');
- try{const j=await post({key:G.key,action:'ping'});j.ok?msg('Connected to your sheet: '+(j.title||'OK')):msg('Not connected: '+j.error,1)}
+ try{const j=await post({key:G.key,action:'ping'});j.ok?msg('Connected to your sheet: '+(j.title||'OK')+(j.v>=2?'':'. To use “Open client”, update the Apps Script (Code.gs) and deploy a new version.')):msg('Not connected: '+j.error,1)}
  catch(e){msg('Could not reach the web app. Check the URL, and that access is set to “Anyone”.',1)}};
 gv('go').onclick=()=>{const u=G.sheet||'';/^https:\/\/docs\.google\.com\/spreadsheets\//.test(u)?window.open(u,'_blank','noopener'):msg('Add your sheet link in the connection settings first.',1)};
 let sarm=0,stm;const sb=gv('sv'),slabel=sb.textContent;
@@ -797,10 +805,47 @@ sb.onclick=async()=>{
  if(!okUrl(G.url)||!G.key){msg('Add your web app URL and secret key under “Google Sheets connection” first.',1);gv('gs').open=true;return}
  if(!sarm){sarm=1;sb.textContent='Tap again: save “'+nm+'” as a new tab';stm=setTimeout(sreset,6000);return}
  sreset();sb.disabled=true;msg('Saving…');
- try{const j=await post({key:G.key,name:nm,rows:sheetRows(G.nric!==false)});
-  j.ok?msg('Saved as new tab “'+j.sheet+'”.',0,/^https:\/\/docs\.google\.com\//.test(j.url||'')?j.url:''):msg('Not saved: '+j.error,1)}
+ try{const j=await post({key:G.key,name:nm,rows:sheetRows(G.nric!==false),data:dataOf()});
+  j.ok?msg('Saved as new tab “'+j.sheet+'”.'+(j.openable?'':' (To make it openable later, update the Apps Script first.)'),0,/^https:\/\/docs\.google\.com\//.test(j.url||'')?j.url:''):msg('Not saved: '+j.error,1)}
  catch(e){msg('Could not confirm the save. Check your sheet before saving again, so you don’t get a duplicate tab.',1)}
  sb.disabled=false};
+// ---------- Open a saved client from the sheet ----------
+const okKey=k=>/^[A-Za-z0-9_]{1,40}$/.test(k)&&k!=='__proto__'&&k!=='constructor'&&k!=='prototype';
+function dataOf(){const o={};for(const k of Object.keys(S)){if(k==='cv_off'||!okKey(k))continue;const v=S[k];if(v===''||v==null||typeof v==='object')continue;if(k==='nric'&&G.nric===false)continue;o[k]=String(v)}return JSON.stringify({v:1,S:o})}
+const LD={items:[],loaded:0},lq=gv('lq'),ll=gv('ll'),PREFK=['by','byt','byc','bye','cv_off'];
+const fmtT=t=>{const d=new Date(t);return isNaN(d)?'':d.toLocaleString('en-GB',{timeZone:'Asia/Kuala_Lumpur',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})};
+const isDef=k=>(k in D0&&String(S[k])===String(D0[k]))||(/^rs\d$/.test(k)&&String(S[k])===String(1000*(+k.slice(2)+1)));
+const hasData=()=>Object.keys(S).some(k=>!PREFK.includes(k)&&!isDef(k)&&S[k]!==''&&S[k]!=null);
+function drawList(){
+ const q=lq.value.trim().toLowerCase(),its=LD.items.filter(x=>!q||(x.tab+' '+(x.name||'')).toLowerCase().includes(q));
+ ll.textContent='';
+ if(!LD.items.length){ll.textContent=LD.loaded?'No openable clients yet. Save a client to the sheet and it will appear here.':'';return}
+ if(!its.length){ll.textContent='No match.';return}
+ its.forEach(x=>{const r=document.createElement('div'),sp=document.createElement('span'),b=document.createElement('b'),sm=document.createElement('small'),bt=document.createElement('button');
+  r.className='r';b.textContent=x.tab;sm.textContent=fmtT(x.saved)?'  ·  saved '+fmtT(x.saved):'';sp.append(b,sm);bt.textContent='Open';bt.onclick=()=>openClient(x,bt);r.append(sp,bt);ll.append(r)})}
+async function refreshList(){
+ if(!okUrl(G.url)||!G.key){msg('Add your web app URL and secret key under “Google Sheets connection” first.',1);gv('gs').open=true;return}
+ msg('Loading your saved clients…');
+ try{const j=await post({key:G.key,action:'list'});
+  if(j.ok){LD.items=Array.isArray(j.items)?j.items.filter(x=>x&&typeof x.tab==='string').slice(0,300):[];LD.loaded=1;drawList();msg(LD.items.length?LD.items.length+' saved client'+(LD.items.length===1?'':'s')+' found.':'No openable clients found yet.')}
+  else if(/Nothing to save/i.test(j.error||''))msg('Your Apps Script is still the old version. Paste the updated Code.gs, then Deploy > Manage deployments > Edit > New version, and try again.',1);
+  else msg('Could not load the list: '+j.error,1)}
+ catch(e){msg('Could not reach the web app. Check the URL, and that access is set to “Anyone”.',1)}}
+let oarm=null,otm;
+async function openClient(x,bt){
+ if(hasData()&&oarm!==x.tab){oarm=x.tab;bt.textContent='Tap again to replace the current client';clearTimeout(otm);otm=setTimeout(()=>{oarm=null;bt.textContent='Open'},6000);return}
+ oarm=null;clearTimeout(otm);bt.disabled=true;msg('Opening “'+x.tab+'”…');
+ try{const j=await post({key:G.key,action:'load',tab:x.tab});
+  if(!j.ok){msg('Could not open: '+j.error,1);bt.disabled=false;return}
+  const d=JSON.parse(j.data),o=d&&d.S&&typeof d.S==='object'?d.S:null;if(!o)throw new Error('bad data');
+  const ns={};for(const k of Object.keys(o)){if(!okKey(k)||k==='cv_off')continue;const v=o[k];if(typeof v==='string'||typeof v==='number')ns[k]=String(v)}
+  for(const k of ['by','byt','byc','bye'])if(S[k])ns[k]=S[k];
+  if(S.cv_off!==undefined)ns.cv_off=S.cv_off;
+  localStorage.setItem(KEY,JSON.stringify(ns));sessionStorage.setItem('cpa-opened',JSON.stringify({tab:x.tab,saved:x.saved,nric:!!ns.nric}));location.reload()}
+ catch(e){msg('Could not open that client. Try again, or check your connection.',1);bt.disabled=false}}
+gv('ld').onclick=()=>{gv('lc').open=true;gv('lc').scrollIntoView({behavior:'smooth',block:'nearest'});refreshList()};
+gv('lr').onclick=refreshList;lq.addEventListener('input',drawList);
+try{const o=JSON.parse(sessionStorage.getItem('cpa-opened')||'null');if(o){sessionStorage.removeItem('cpa-opened');msg('Opened “'+String(o.tab).slice(0,100)+'”'+(fmtT(o.saved)?' (saved '+fmtT(o.saved)+')':'')+'. Check the figures; saving again adds a new tab.'+(o.nric?'':' The NRIC was not saved in the sheet, so enter it again if needed.'),0)}}catch(e){}
 </script>
 </body>
 </html>
