@@ -45,6 +45,8 @@ input,select{font:16px -apple-system,Arial,sans-serif;padding:8px;border:1px sol
 .t{overflow-x:auto}
 table{border-collapse:collapse;width:100%;min-width:540px}
 table.pol{min-width:660px}
+body.nocv .pol th:nth-child(6),body.nocv .pol td:nth-child(6),body.nocv .cvm{display:none}
+.cvsw{margin:0 0 6px}
 th{background:var(--nav);color:#fff;font:600 11px -apple-system,Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;text-align:left;padding:7px 6px}
 td{border-bottom:1px solid var(--line);padding:5px 4px;font-size:14px;vertical-align:middle}
 td input,td select{padding:6px;text-align:center;text-align-last:center}
@@ -137,6 +139,7 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
  .g{grid-template-columns:repeat(4,1fr);gap:6px 10px}
  h3{margin:10px 0 6px;break-after:avoid}
  .ll{max-height:64mm}
+ #rcard .ll{max-height:50mm}
  .pv{display:block;white-space:normal;overflow-wrap:anywhere;font:inherit;color:var(--fg);min-height:1.2em}
  .pv+input,.pv+select{display:none!important}
  .ch .pv,.pv.nw{white-space:nowrap}
@@ -165,7 +168,7 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
  body.bi td .o .xd{display:inline;margin-left:.25em}
  body.bi td .o .xd::before{content:'/ '}
  body.bi .ec .ll{max-height:19mm}
- body.bi #rcard .ll{max-height:52mm}
+ body.bi #rcard .ll{max-height:46mm}
  body.bi #sG .t{margin-top:4px}
  body.bi #sG .n{margin:4px 0 0}
  body.bi td .o,body.bi td .o .xd{white-space:nowrap}
@@ -217,12 +220,15 @@ textarea{width:100%;height:110px;margin-top:8px;font:13px monospace;background:v
  <div class="g" id="byg"></div>
  <p class="n" id="pon"></p>
  <p class="disc">This analysis is based on the information provided and the assumptions shown. It illustrates your protection position to support planning and is not a guarantee or an offer of any product.</p>
+ <p class="disc">Income tax and EPF figures are estimates only, based on the rates and assumptions stated; they are not a tax filing or an EPF statement.</p>
 </section>
 <textarea id="ta"></textarea>
 </main>
 <script>
-const KEY='cpa-v1',A0={child:25,spouse:10,par:10,emer:6,lifex:10,ciy:5,pay:5,rb:200,pre:90,post:90,ann:1000000,life:2000000,plan:85};
+const KEY='cpa-v1',A0={child:25,spouse:10,par:10,emer:6,lifex:10,ciy:5,pay:5,rb:200,pre:90,post:90,ann:1000000,life:2000000,plan:85,rl_ind:9000,rl_life:3000,rl_med:4000,rl_epf:4000,epf_r:6,epf_ee:11,epf_er:13};
 const D0={ret_age:60,g_infl:3,g_ret:4,by:'',byt:''};
+// Resident individual income tax, YA2026: [chargeable income above, rate on the slice, tax on income up to that point]
+const TB=[[0,0,0],[5000,.01,0],[20000,.03,150],[35000,.06,600],[50000,.11,1500],[70000,.19,3700],[100000,.25,9400],[400000,.26,84400],[600000,.28,136400],[2000000,.30,528400]];
 let S={},O={};
 try{S=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){S={}}
 for(const k in D0)if(S[k]===undefined)S[k]=D0[k];
@@ -240,7 +246,7 @@ const fm=(v,f)=>{if(v===''||v==null||(typeof v==='number'&&!isFinite(v)))return 
  if(f==='sf')return v<0?'Shortfall':v>0?'Surplus':'Fully covered';
  if(f==='sa')return fm(Math.abs(v),'m');
  if(f==='p')return Math.round(v*100)+'%';if(f==='x2')return v.toFixed(2)+'x';if(f==='y')return v.toFixed(1)+' yrs';return String(v)};
-const MON=/^(inc|bonus|al\d|sm\d|st\d|(?:pm|plf|pci|pac|psv)\d|o\d|mo\d|oc|fin|edu|m_rb|m_ann|m_oplim|m_prem|m_lt_v|m_par_v|ret_sav|rs\d|a_(rb|ann|life))$/;
+const MON=/^(inc|bonus|al\d|sm\d|st\d|(?:pm|plf|pci|pac|psv)\d|o\d|mo\d|oc|fin|edu|m_rb|m_ann|m_oplim|m_prem|m_lt_v|m_par_v|ret_sav|epf_bal|tx_(?:ins|med|epf|oth)|rs\d|a_(rb|ann|life|rl_(?:ind|life|med|epf)))$/;
 const cleanM=v=>String(v).replace(/[^\d.\-]/g,'');
 const fmtM=v=>{const x=parseFloat(v);return v===''||v==null||isNaN(x)?'':(x<0?'-':'')+'RM'+Math.abs(x).toLocaleString('en-MY',{maximumFractionDigits:2})};
 const rawM=k=>S[k]??(k.startsWith('a_')?A0[k.slice(2)]:'');
@@ -306,7 +312,7 @@ const TR={};
 ['Life / TPD cover (RM)','Perlindungan hayat / TPD (RM)','人寿／完全永久伤残保障 (RM)'],
 ['Critical illness cover (RM)','Perlindungan penyakit kritikal (RM)','危疾保障 (RM)'],
 ['Accidental cover (RM)','Perlindungan kemalangan (RM)','意外保障 (RM)'],
-['Investment / savings (RM)','Pelaburan / simpanan (RM)','投资／储蓄 (RM)'],
+['Cash value (RM)','Nilai tunai (RM)','现金价值 (RM)'],
 ['Yearly premium (monthly × 12)','Premium tahunan (bulanan × 12)','年度保费（每月 × 12）'],
 ['Total insurance premiums','Jumlah premium insurans','保险保费总额'],
 ['C.2 Debts & commitments','C.2 Hutang & komitmen','C.2 债务及承担'],
@@ -361,7 +367,7 @@ const TR={};
 ['Premium as % of annual income','Premium sebagai % pendapatan tahunan','保费占年收入百分比'],
 ['Protection lifeline','Garis hayat perlindungan','保障生命线'],
 ['Existing sum assured is the total of the Life, Critical illness and Accidental cover entered for each policy in C.1 (Insurance premiums).','Jumlah diinsuranskan sedia ada ialah jumlah perlindungan Hayat, Penyakit Kritikal dan Kemalangan yang dimasukkan bagi setiap polisi dalam C.1 (Premium insurans).','现有保额为 C.1（保险保费）中各保单所填人寿、危疾及意外保障金额之总和。'],
-['Investment / savings in policies (from C.1), for reference','Pelaburan / simpanan dalam polisi (daripada C.1), untuk rujukan','保单内的投资／储蓄（来自 C.1），仅供参考'],
+['Cash value of policies (from C.1), for reference','Nilai tunai polisi (daripada C.1), untuk rujukan','保单现金价值（来自 C.1），仅供参考'],
 // F
 ['Medical coverage','Perlindungan perubatan','医疗保障'],
 ['Insurer','Syarikat insurans','保险公司'],
@@ -391,7 +397,6 @@ const TR={};
 ['Medical gaps (count)','Jurang perubatan (bilangan)','医疗保障缺口（项数）'],
 // G
 ['Retirement need','Keperluan persaraan','退休需求'],
-['Projected retirement savings at retirement (RM) – EPF / PRS / other','Unjuran simpanan persaraan semasa bersara (RM) – KWSP / PRS / lain-lain','退休时预计储蓄 (RM) – 公积金 (EPF)／PRS／其他'],
 ['Inflation rate (% p.a.)','Kadar inflasi (% setahun)','通货膨胀率（每年 %）'],
 ['Savings return after retirement (% p.a.)','Pulangan simpanan selepas bersara (% setahun)','退休后储蓄回报率（每年 %）'],
 ['Years to retirement','Tahun sebelum bersara','距离退休年数'],
@@ -432,6 +437,31 @@ const TR={};
 ['Medical min annual limit (RM)','Minimum had tahunan perubatan (RM)','医疗最低年度限额 (RM)'],
 ['Medical min lifetime limit (RM)','Minimum had seumur hidup perubatan (RM)','医疗最低终身限额 (RM)'],
 ['Retirement plan-to age (years)','Umur perancangan persaraan hingga (tahun)','退休规划至年龄（岁）'],
+['Tax bracket (YA2026, estimate)','Kadar cukai (TT2026, anggaran)','税率级别（2026 评税年，估算）'],
+['Income tax estimate (YA2026, resident)','Anggaran cukai pendapatan (TT2026, pemastautin)','个人所得税估算（2026 评税年，居民）'],
+['Life insurance / takaful premium paid by client (RM per year)','Premium insurans hayat / takaful yang dibayar oleh klien (RM setahun)','客户缴付的人寿保险／takaful 保费（RM／年）'],
+['Education & medical insurance premium paid by client (RM per year)','Premium insurans pendidikan & perubatan yang dibayar oleh klien (RM setahun)','客户缴付的教育及医疗保险保费（RM／年）'],
+['EPF contribution by client (RM per year) – blank = auto, 0 = none','Caruman KWSP oleh klien (RM setahun) – kosong = automatik, 0 = tiada','客户的公积金（EPF）缴款（RM／年）– 留空＝自动，0＝无'],
+['Other tax reliefs (RM per year)','Pelepasan cukai lain (RM setahun)','其他税务减免（RM／年）'],
+['Total tax reliefs','Jumlah pelepasan cukai','税务减免总额'],
+['Chargeable income','Pendapatan bercukai','应税收入'],
+['Estimated tax payable (yearly)','Anggaran cukai kena dibayar (setahun)','估计应缴税款（每年）'],
+['Effective tax rate','Kadar cukai efektif','实际税率'],
+['Estimate for a resident individual using YA2026 rates. Default reliefs: individual RM9,000; EPF up to RM4,000 (automatic at 11% of gross salary unless you key in the amount); life insurance / takaful up to RM3,000; education & medical insurance up to RM4,000 (the amounts can be changed in Assumptions). Payable tax is after the RM400 rebate when chargeable income is RM35,000 or less. Estimate only, not a tax filing.','Anggaran bagi individu pemastautin menggunakan kadar TT2026. Pelepasan lalai: individu RM9,000; KWSP sehingga RM4,000 (automatik pada 11% gaji kasar kecuali anda memasukkan jumlahnya); insurans hayat / takaful sehingga RM3,000; insurans pendidikan & perubatan sehingga RM4,000 (jumlah boleh diubah dalam Andaian). Cukai kena dibayar adalah selepas rebat RM400 apabila pendapatan bercukai RM35,000 atau kurang. Anggaran sahaja, bukan penyerahan borang cukai.','以居民个人及 2026 评税年税率估算。默认减免：个人 RM9,000；公积金（EPF）最高 RM4,000（除非您输入实际金额，否则按总薪金的 11% 自动计算）；人寿保险／takaful 最高 RM3,000；教育及医疗保险最高 RM4,000（金额可在“假设”中修改）。若应税收入不超过 RM35,000，应缴税款已扣除 RM400 税务回扣。仅为估算，并非报税。'],
+['EPF balance now (RM)','Baki KWSP sekarang (RM)','公积金（EPF）现有结余 (RM)'],
+['Other projected savings (RM) – PRS / other','Simpanan lain yang diunjurkan (RM) – PRS / lain-lain','预计的其他储蓄 (RM)——PRS／其他'],
+['Monthly EPF contribution (employee + employer)','Caruman KWSP bulanan (pekerja + majikan)','每月公积金缴款（员工＋雇主）'],
+['Projected EPF savings at retirement','Unjuran simpanan KWSP semasa bersara','退休时预计公积金储蓄'],
+['Total projected savings (EPF + other)','Jumlah unjuran simpanan (KWSP + lain-lain)','预计储蓄总额（公积金＋其他）'],
+['EPF projection: the balance now grows at the EPF return in Assumptions (default 6% a year), and monthly contributions of the employee + employer share of monthly gross income (default 11% + 13% = 24%) are added until age 60, or the planned retirement age if earlier. Salary is held constant. Estimate only, not an EPF statement.','Unjuran KWSP: baki sekarang berkembang pada pulangan KWSP dalam Andaian (lalai 6% setahun), dan caruman bulanan bahagian pekerja + majikan daripada pendapatan kasar bulanan (lalai 11% + 13% = 24%) ditambah sehingga umur 60, atau umur persaraan yang dirancang jika lebih awal. Gaji dianggap tetap. Anggaran sahaja, bukan penyata KWSP.','公积金（EPF）预测：现有结余按“假设”中的公积金回报率（默认每年 6%）增长，并按每月总收入的员工＋雇主缴款比例（默认 11% + 13% = 24%）逐月加入，直至 60 岁或计划退休年龄（以较早者为准）。薪金视为不变。仅为估算，并非公积金报表。'],
+['Income tax and EPF figures are estimates only, based on the rates and assumptions stated; they are not a tax filing or an EPF statement.','Angka cukai pendapatan dan KWSP hanyalah anggaran, berdasarkan kadar dan andaian yang dinyatakan; ia bukan penyerahan borang cukai atau penyata KWSP.','所得税及公积金（EPF）数字仅为估算，依据所列税率及假设，并非报税或公积金报表。'],
+['Tax relief: individual (RM)','Pelepasan cukai: individu (RM)','税务减免：个人 (RM)'],
+['Tax relief cap: EPF (RM)','Had pelepasan cukai: KWSP (RM)','税务减免上限：公积金 (RM)'],
+['Tax relief cap: life insurance / takaful (RM)','Had pelepasan cukai: insurans hayat / takaful (RM)','税务减免上限：人寿保险／takaful (RM)'],
+['Tax relief cap: education & medical insurance (RM)','Had pelepasan cukai: insurans pendidikan & perubatan (RM)','税务减免上限：教育及医疗保险 (RM)'],
+['EPF average return (% p.a.)','Purata pulangan KWSP (% setahun)','公积金平均回报（每年 %）'],
+['EPF employee share (% of monthly gross)','Bahagian pekerja KWSP (% pendapatan kasar bulanan)','公积金员工缴款（占每月总收入 %）'],
+['EPF employer share (% of monthly gross) – 13% up to RM5,000 wages, 12% above','Bahagian majikan KWSP (% pendapatan kasar bulanan) – 13% sehingga gaji RM5,000, 12% selebihnya','公积金雇主缴款（占每月总收入 %）——工资至 RM5,000 为 13%，超过则为 12%'],
 ['Common rules of thumb and placeholders, not regulatory figures.','Kaedah praktikal biasa dan nilai ganti, bukan angka kawal selia.','常用经验法则及占位数值，并非监管数据。'],
 // statuses and short words
 ['Shortfall','Kekurangan','缺口'],['Surplus','Lebihan','盈余'],['Fully covered','Dilindungi sepenuhnya','已完全保障'],
@@ -469,7 +499,7 @@ function setDates(){
 }
 
 // A
-let h=sec('A','Client profile',`<div class="g">${fld('NRIC no.',inp('nric','text','inputmode="numeric" placeholder="e.g. 880214-13-5678"'),'nric')}${fld('Occupation',inp('occ'))}${fld('Marital status',sel('mar',['','Single','Married','Divorced','Widowed']))}${fld('Has financial dependants?',yn('dep'))}${fld('Monthly gross income (RM)',inp('inc','number'))}${fld('Annual bonus / other income (RM)',inp('bonus','number'))}${fld('Planned retirement age',inp('ret_age','number'))}${fv('Date of birth',out('dob','s'))}${fv('Age (years)',out('age','s'))}${fv('Annual income',out('annual','m'),'t')}</div>`);
+let h=sec('A','Client profile',`<div class="g">${fld('NRIC no.',inp('nric','text','inputmode="numeric" placeholder="e.g. 880214-13-5678"'),'nric')}${fld('Occupation',inp('occ'))}${fld('Marital status',sel('mar',['','Single','Married','Divorced','Widowed']))}${fld('Has financial dependants?',yn('dep'))}${fld('Monthly gross income (RM)',inp('inc','number'))}${fld('Annual bonus / other income (RM)',inp('bonus','number'))}${fld('Planned retirement age',inp('ret_age','number'))}${fv('Date of birth',out('dob','s'))}${fv('Age (years)',out('age','s'))}${fv('Annual income',out('annual','m'),'t')}${fv('Tax bracket (YA2026, estimate)',out('tx_rate','s'),'t')}${fv('Chargeable income',out('tx_ci','m'),'t')}${fv('Estimated tax payable (yearly)',out('tx_pay','m'),'t')}</div><div class="noprint"><h3>Income tax estimate (YA2026, resident)</h3><div class="g">${fld('Life insurance / takaful premium paid by client (RM per year)',inp('tx_ins','number'))}${fld('Education & medical insurance premium paid by client (RM per year)',inp('tx_med','number'))}${fld('EPF contribution by client (RM per year) – blank = auto, 0 = none',inp('tx_epf','number'))}${fld('Other tax reliefs (RM per year)',inp('tx_oth','number'))}${fv('Total tax reliefs',out('tx_rel','m'))}${fv('Effective tax rate',out('tx_eff','s'))}</div><p class="n">Estimate for a resident individual using YA2026 rates. Default reliefs: individual RM9,000; EPF up to RM4,000 (automatic at 11% of gross salary unless you key in the amount); life insurance / takaful up to RM3,000; education & medical insurance up to RM4,000 (the amounts can be changed in Assumptions). Payable tax is after the RM400 rebate when chargeable income is RM35,000 or less. Estimate only, not a tax filing.</p></div>`);
 // B
 let b='';for(let i=0;i<6;i++)b+=`<tr><td>${sel('r'+i,['','Spouse','Child','Parent','Other'])}</td><td>${inp('nm'+i)}</td><td>${inp('d'+i,'date')}</td><td>${out('dag'+i,'s')}</td><td>${out('dyr'+i,'s')}</td><td>${inp('al'+i,'number')}</td></tr>`;
 h+=sec('B','Dependants',`<div class="t"><table><tr><th>Relationship</th><th>Name</th><th>Date of birth</th><th>Age</th><th>Years of support</th><th>Monthly allowance (RM)</th></tr>${b}</table></div><p class="n">Support needs are calculated directly in Part D (Life needs analysis).</p>`);
@@ -482,7 +512,7 @@ let c1b='';pl.forEach(i=>{const j=i-1;c1b+=`<tr><td>Policy / certificate ${i}</t
 c1b+=`<tr class="tot"><td>Total insurance premiums</td><td>${out('pm')}</td><td>${out('pt_life')}</td><td>${out('pt_ci')}</td><td>${out('pt_pa')}</td><td>${out('pt_sv')}</td></tr>`;
 const dn=['Home loan (mortgage)','Car loan','Personal / education loan (e.g. PTPTN)','Credit card, paylater (e.g. SPayLater) & other consumer debt','Business loan / guarantor liability','Other commitments (zakat, telco / phone instalment, electricity bills, etc.)','Expenses: food, groceries'];
 let c2='';dn.forEach((x,i)=>c2+=i===6?`<tr><td>${x}</td><td></td><td>${inp('mo6','number')}</td><td></td><td></td></tr>`:`<tr><td>${x}</td><td>${inp('o'+i,'number')}</td><td>${inp('mo'+i,'number')}</td><td>${inp('yr'+i,'number')}</td><td>${i?'':yn('mrta')}</td></tr>`);
-h+=sec('C','Financial position',`<h3>C.1 Savings, investments & insurance premiums</h3><div class="t"><table><tr><th>Item</th><th>Monthly (RM)</th><th>Total to date (RM)</th></tr>${c1}</table></div><h3>Insurance premiums</h3><div class="t"><table class="pol"><tr><th>Item</th><th>Monthly premium (RM)</th><th>Life / TPD cover (RM)</th><th>Critical illness cover (RM)</th><th>Accidental cover (RM)</th><th>Investment / savings (RM)</th></tr>${c1b}</table></div>${rw('Yearly premium (monthly × 12)','annprem')}
+h+=sec('C','Financial position',`<h3>C.1 Savings, investments & insurance premiums</h3><div class="t"><table><tr><th>Item</th><th>Monthly (RM)</th><th>Total to date (RM)</th></tr>${c1}</table></div><h3>Insurance premiums</h3><div class="noprint cvsw"><label class="chk"><input type="checkbox" id="cvt" checked> Show cash value column</label></div><div class="t"><table class="pol"><tr><th>Item</th><th>Monthly premium (RM)</th><th>Life / TPD cover (RM)</th><th>Critical illness cover (RM)</th><th>Accidental cover (RM)</th><th>Cash value (RM)</th></tr>${c1b}</table></div>${rw('Yearly premium (monthly × 12)','annprem')}
 <h3 class="c2">C.2 Debts & commitments</h3><div class="t"><table><tr><th>Item</th><th>Outstanding (RM)</th><th>Monthly (RM)</th><th>Remaining years</th><th>Home loan covered by MRTA/MRTT or MLTA/MLTT?</th></tr>${c2}</table></div>${rw('Total debts (outstanding)','td','m','t')}${rw('Total monthly commitments & expenses','tm','m','b t')}${rw('Less: home loan covered by MRTA/MRTT / MLTA/MLTT (auto)','cov')}${ri('Less: other debt covered (credit-linked cover, etc.)','oc')}${rw('Net debts to be protected','net','m','b t')}
 <h3>Monthly cash-flow analysis</h3>${rw('Monthly gross income','cf_inc')}${rw('Less: monthly savings & investments (C.1)','cf_sav')}${rw('Less: monthly insurance premiums (C.1)','cf_prem')}${rw('Less: monthly debts, commitments & expenses (C.2)','cf_debt')}${rw('Balance after savings, premiums & debts','cf_bal','m','b t')}<div id="bar" data-dyn></div>`);
 // D
@@ -492,7 +522,7 @@ ${rw('Less: savings & investments to offset (from C.1)','sv')}${rw('Needs-based 
 // E
 const cv=[['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']];
 let e='';cv.forEach(([k,l])=>e+=`<tr><td>${l}</td><td>${out('pt_'+k)}</td><td>${out('cn_'+k)}</td><td>${out('cd_'+k,'sa')}</td><td>${out('cd_'+k,'sf')}</td><td>${out('cy_'+k,'y')}</td></tr>`);
-h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Shortfall / surplus (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div><p class="n">Existing sum assured is the total of the Life, Critical illness and Accidental cover entered for each policy in C.1 (Insurance premiums).</p>${rw('Investment / savings in policies (from C.1), for reference','pt_sv')}${rw('Total annual premium, all policies (from C.1)','annprem','m','t')}${rw('Premium as % of annual income','pp','p')}<h3 class="lf">Protection lifeline</h3><div id="ecards" data-dyn></div>`);
+h+=sec('E','Existing coverage vs need',`<div class="t"><table><tr><th>Cover</th><th>Existing sum assured (RM)</th><th>Needed (RM)</th><th>Shortfall / surplus (RM)</th><th>Status</th><th>Years of income covered</th></tr>${e}</table></div><p class="n">Existing sum assured is the total of the Life, Critical illness and Accidental cover entered for each policy in C.1 (Insurance premiums).</p>${rw('Cash value of policies (from C.1), for reference','pt_sv','m','cvm')}${rw('Total annual premium, all policies (from C.1)','annprem','m','t')}${rw('Premium as % of annual income','pp','p')}<h3 class="lf">Protection lifeline</h3><div id="ecards" data-dyn></div>`);
 // F
 const mr=[['Daily room & board (RM/day)','m_rb','rb','m'],['Pre-hospitalisation (days)','m_pre','pre','s'],['Post-hospitalisation (days)','m_post','post','s'],['Annual limit (RM)','m_ann','ann','m']];
 let m='';mr.forEach(([l,k,a,f])=>m+=`<tr><td>${l}</td><td>${inp(k,'number')}</td><td>${out('mn_'+a,f)}</td><td>${out('s_'+k.slice(2),'s')}</td></tr>`);
@@ -503,17 +533,18 @@ m+=`<tr><td>Parent accompanying child (RM/day)</td><td>${ch('m_par','As charged'
 h+=sec('F','Medical coverage',`<div class="g">${fld('Insurer',inp('m_name'))}${fld('Plan name',inp('m_plan'))}${fld('Deductible / co-insurance',inp('m_ded'))}${fld('Outpatient cancer / kidney annual limit (RM)',inp('m_oplim','number'))}${fld('Renewable up to age / premium type',inp('m_renew'))}${fld('Annual medical premium (RM)',inp('m_prem','number'))}</div><div class="t" style="margin-top:8px"><table><tr><th>Benefit</th><th>Client’s plan</th><th>Suggested minimum</th><th>Status</th></tr>${m}</table></div>${rw('Medical gaps (count)','mg','s','b t')}`,0);
 // G
 let g='';for(let i=0;i<10;i++)g+=`<tr><td>${inp('rs'+i,'number')}</td><td>${out('ra'+i)}</td><td>${out('rc'+i)}</td><td>${out('rg'+i)}</td><td>${out('rs_'+i,'s')}</td><td>${out('rf'+i,'p')}</td></tr>`;
-h+=sec('G','Retirement need',`<div class="g">${fld('Planned retirement age',inp('ret_age','number'))}${fld('Projected retirement savings at retirement (RM) – EPF / PRS / other',inp('ret_sav','number'))}${fld('Inflation rate (% p.a.)',inp('g_infl','number'))}${fld('Savings return after retirement (% p.a.)',inp('g_ret','number'))}</div>${rw('Years to retirement','y1','s')}${rw('Years in retirement','y2','s')}<div class="t" style="margin-top:8px"><table><tr><th>Monthly spending (today’s RM)</th><th>First-year spending at retirement</th><th>Fund needed at retirement</th><th>Gap</th><th>Status</th><th>Funded</th></tr>${g}</table></div><p class="n">Spending levels are editable. Fund needed = present value at retirement of annual spending, inflated to retirement and paid at the start of each year, with savings earning the return you enter. Gap shows once projected savings are keyed in.</p><h3>Retirement lifeline</h3><div id="rcard" data-dyn></div>`,0);
+h+=sec('G','Retirement need',`<div class="g">${fld('Planned retirement age',inp('ret_age','number'))}${fld('EPF balance now (RM)',inp('epf_bal','number'))}${fld('Other projected savings (RM) – PRS / other',inp('ret_sav','number'))}${fv('Monthly EPF contribution (employee + employer)',out('epf_mc','m'),'ep noprint')}${fv('Projected EPF savings at retirement',out('epf_fv','m'),'ep')}${fv('Total projected savings (EPF + other)',out('ret_tot','m'),'t ep')}${fld('Inflation rate (% p.a.)',inp('g_infl','number'))}${fld('Savings return after retirement (% p.a.)',inp('g_ret','number'))}</div><p class="n ep noprint">EPF projection: the balance now grows at the EPF return in Assumptions (default 6% a year), and monthly contributions of the employee + employer share of monthly gross income (default 11% + 13% = 24%) are added until age 60, or the planned retirement age if earlier. Salary is held constant. Estimate only, not an EPF statement.</p>${rw('Years to retirement','y1','s')}${rw('Years in retirement','y2','s')}<div class="t" style="margin-top:8px"><table><tr><th>Monthly spending (today’s RM)</th><th>First-year spending at retirement</th><th>Fund needed at retirement</th><th>Gap</th><th>Status</th><th>Funded</th></tr>${g}</table></div><p class="n">Spending levels are editable. Fund needed = present value at retirement of annual spending, inflated to retirement and paid at the start of each year, with savings earning the return you enter. Gap shows once projected savings are keyed in.</p><h3>Retirement lifeline</h3><div id="rcard" data-dyn></div>`,0);
 // H
 h+=sec('H','Estate planning (will / trust)',`<div class="g">${fld('Will done? (Y/N)',yn('will'))}${fld('Will: year made / drawn up by',inp('will_d'))}${fld('Trust done? (Y/N)',yn('trust'))}${fld('Trust: type / year / trustee',inp('trust_d'))}</div><div class="r"><span>Will status</span>${out('s_will','s')}</div><div class="r"><span>Trust status</span>${out('s_trust','s')}</div>${rw('Estate planning summary','es','s','b t')}`);
 // Assumptions
-const al=[['child','Child dependency age (years)'],['spouse','Years of spouse support'],['par','Years of parent / other support'],['emer','Emergency fund (months of income)'],['lifex','Life cover: multiple of annual income'],['ciy','Critical illness: years of income'],['pay','Accidental: years of income'],['rb','Medical min room & board (RM/day)'],['pre','Medical min pre-hospitalisation (days)'],['post','Medical min post-hospitalisation (days)'],['ann','Medical min annual limit (RM)'],['life','Medical min lifetime limit (RM)'],['plan','Retirement plan-to age (years)']];
+const al=[['child','Child dependency age (years)'],['spouse','Years of spouse support'],['par','Years of parent / other support'],['emer','Emergency fund (months of income)'],['lifex','Life cover: multiple of annual income'],['ciy','Critical illness: years of income'],['pay','Accidental: years of income'],['rb','Medical min room & board (RM/day)'],['pre','Medical min pre-hospitalisation (days)'],['post','Medical min post-hospitalisation (days)'],['ann','Medical min annual limit (RM)'],['life','Medical min lifetime limit (RM)'],['plan','Retirement plan-to age (years)'],['rl_ind','Tax relief: individual (RM)'],['rl_epf','Tax relief cap: EPF (RM)'],['rl_life','Tax relief cap: life insurance / takaful (RM)'],['rl_med','Tax relief cap: education & medical insurance (RM)'],['epf_r','EPF average return (% p.a.)'],['epf_ee','EPF employee share (% of monthly gross)'],['epf_er','EPF employer share (% of monthly gross) – 13% up to RM5,000 wages, 12% above']];
 h+=sec('','Assumptions & benchmarks (editable)',`<div class="g">${al.map(([k,l])=>fld(l,inp('a_'+k,'number'))).join('')}</div><p class="n">Common rules of thumb and placeholders, not regulatory figures.</p>`,0).replace('<span class="no"></span>','').replace('<details class="card"','<details class="card noprint"');
 document.getElementById('app').innerHTML=h;
 document.getElementById('byg').innerHTML=fld('Name',inp('by'))+fld('Designation',inp('byt'),'wide')+fld('Phone',inp('byc','tel','inputmode="tel" autocomplete="tel" placeholder="e.g. 012-345 6789"'))+fld('Email',inp('bye','email','inputmode="email" autocomplete="email" placeholder="name@example.com"'),'wide');
 const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Kuala_Lumpur'});
 setDates();applyLang();
 document.querySelectorAll('[data-k]').forEach(el=>{const v=rawM(el.dataset.k);el.value=el.dataset.m?fmtM(v):v});
+const cvt=document.getElementById('cvt');cvt.checked=S.cv_off!=='1';cvt.onchange=()=>{S.cv_off=cvt.checked?'':'1';save();calc()};
 
 function lifeline(cov,need){
  const mx=Math.max(need,cov,1),x0=16,x1=584,px=y=>x0+(x1-x0)*y/mx,st=mx<=12?1:mx<=30?2:5;
@@ -563,9 +594,16 @@ MS.pa.x={
 
 function calc(){
  O={};
+ document.body.classList.toggle('nocv',S.cv_off==='1');
  const dd=dobN(S.nric),ag=dd?age(dd):null;
  O.dob=dd?dd.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'';O.age=ag==null?'':ag;
  const inc=n('inc'),annual=inc*12+n('bonus');O.annual=annual;
+ // income tax estimate (resident, YA2026): reliefs -> chargeable income -> bracket -> tax, less RM400 rebate when chargeable income <= RM35,000
+ if(annual>0){const cp=(v,c)=>Math.max(0,Math.min(v,c)),epr=S.tx_epf!==undefined&&S.tx_epf!==''?cp(n('tx_epf'),A('rl_epf')):cp(inc*12*A('epf_ee')/100,A('rl_epf')),
+  rel=A('rl_ind')+epr+cp(n('tx_ins'),A('rl_life'))+cp(n('tx_med'),A('rl_med'))+Math.max(0,n('tx_oth')),ci=Math.max(0,annual-rel);let bd=TB[0];for(const x of TB)if(x[0]<ci)bd=x;
+  const gt=bd[2]+(ci-bd[0])*bd[1],tx=ci<=35000?Math.max(0,gt-400):gt;
+  O.tx_rel=rel;O.tx_ci=ci;O.tx_rate=Math.round(bd[1]*100)+'%';O.tx_pay=tx;O.tx_eff=(tx/annual*100).toFixed(1)+'%'}
+ else O.tx_rel=O.tx_ci=O.tx_rate=O.tx_pay=O.tx_eff='';
  // dependants -> income replacement
  let irep=0,dp=[];
  for(let i=0;i<6;i++){const r=S['r'+i],d=S['d'+i],a=d?age(d):null;let y=0;
@@ -611,7 +649,12 @@ function calc(){
  yl.forEach(([k])=>O['s_'+k]=S['m_'+k]?(S['m_'+k]==='Y'?'OK':'GAP'):'');
  O.s_ncb=S.m_ncb?(S.m_ncb==='Y'?'OK':'GAP'):'';O.mg=['rb','pre','post','ann','lt','ncb',...yl.map(x=>x[0])].filter(k=>O['s_'+k]==='GAP').length;
  // G
- const ra=n('ret_age'),inf=n('g_infl')/100,rt=n('g_ret')/100,y1=ag==null?0:Math.max(0,ra-ag),y2=Math.max(0,A('plan')-Math.max(ra,ag==null?0:ag)),fac=Math.pow(1+inf,y1),rr=(1+rt)/(1+inf)-1,sv=n('ret_sav'),hs=S.ret_sav!==undefined&&S.ret_sav!=='';
+ const ra=n('ret_age'),inf=n('g_infl')/100,rt=n('g_ret')/100,y1=ag==null?0:Math.max(0,ra-ag),y2=Math.max(0,A('plan')-Math.max(ra,ag==null?0:ag)),fac=Math.pow(1+inf,y1),rr=(1+rt)/(1+inf)-1,hb=S.epf_bal!==undefined&&S.epf_bal!=='',hs=hb||(S.ret_sav!==undefined&&S.ret_sav!=='');
+ // EPF: balance now grows at the EPF return; monthly contributions (employee + employer share of monthly gross income) are added until age 60 or the planned retirement age if earlier
+ let epf=0,emc=0;if(hb){const er=A('epf_r')/100,rm=Math.pow(1+er,1/12)-1,cm=ag==null?0:Math.round(Math.max(0,Math.min(ra,60)-ag)*12);emc=inc*(A('epf_ee')+A('epf_er'))/100;
+  epf=n('epf_bal')*Math.pow(1+er,y1)+emc*(Math.abs(rm)<1e-12?cm:(Math.pow(1+rm,cm)-1)/rm)*Math.pow(1+er,y1-cm/12)}
+ const sv=epf+n('ret_sav');O.epf_hb=hb;O.epf_mc=hb?emc:'';O.epf_fv=hb?epf:'';O.ret_tot=hs?sv:'';
+ document.querySelectorAll('.ep').forEach(el=>el.classList.toggle('hid',!hb));
  O.y1=y1;O.y2=y2;O.fac=fac;const rows=[],sa=Math.max(ra,ag==null?0:ag);
  for(let i=0;i<10;i++){const mv=S['rs'+i];if(mv===''||mv==null){['ra','rc','rg','rs_','rf'].forEach(p=>O[p+i]='');continue}
   const a1=parseFloat(mv)*12*fac,pv=Math.abs(rr)<1e-9?a1*y2:a1*(1-Math.pow(1+rr,-y2))/rr*(1+rr);
@@ -667,7 +710,7 @@ document.getElementById('cp').onclick=()=>{
 let armed=0;
 document.getElementById('clr').onclick=ev=>{
  if(!armed){armed=1;ev.target.textContent='Tap again to clear';setTimeout(()=>{armed=0;ev.target.textContent='Clear client'},4000);return}
- const keep={by:S.by,byt:S.byt,byc:S.byc,bye:S.bye};try{localStorage.setItem(KEY,JSON.stringify(keep))}catch(e){}location.reload();
+ const keep={by:S.by,byt:S.byt,byc:S.byc,bye:S.bye,cv_off:S.cv_off};try{localStorage.setItem(KEY,JSON.stringify(keep))}catch(e){}location.reload();
 };
 
 // ---------- Google Sheets: save each client as a new tab ----------
@@ -687,16 +730,19 @@ function sheetRows(incNric){
  add('sec',['A. CLIENT PROFILE']);
  if(incNric)add('row',['NRIC no.',S.nric||'']);
  add('row',['Date of birth',O.dob]);add('row',['Age (years)',v(O.age)]);add('row',['Occupation',S.occ||'']);add('row',['Marital status',S.mar||'']);add('row',['Has financial dependants?',S.dep||'']);add('row',['Planned retirement age',n('ret_age')]);
- add('row',['Monthly gross income',n('inc')],[1]);add('row',['Annual bonus / other income',n('bonus')],[1]);add('tot',['Annual income',O.annual],[1]);add('blank',[]);
+ add('row',['Monthly gross income',n('inc')],[1]);add('row',['Annual bonus / other income',n('bonus')],[1]);add('tot',['Annual income',O.annual],[1]);
+ if(O.annual>0){add('row',['Tax bracket (YA2026, estimate)',O.tx_rate]);if(S.tx_ins)add('row',['Life insurance / takaful premium paid (yearly)',n('tx_ins')],[1]);if(S.tx_med)add('row',['Education & medical insurance premium paid (yearly)',n('tx_med')],[1]);
+  add('row',['Total tax reliefs',O.tx_rel],[1]);add('row',['Chargeable income',O.tx_ci],[1]);add('row',['Estimated tax payable (yearly)',O.tx_pay],[1]);add('row',['Effective tax rate',O.tx_eff])}
+ add('blank',[]);
  add('sec',['B. DEPENDANTS']);add('th',['Relationship','Name','Date of birth','Age','Years of support','Monthly allowance']);
  for(let i=0;i<6;i++)if(S['r'+i])add('row',[S['r'+i],S['nm'+i]||'',S['d'+i]||'',v(O['dag'+i]),v(O['dyr'+i]),n('al'+i)],[5]);
  add('blank',[]);add('sec',['C. FINANCIAL POSITION']);
  add('sub',['C.1 Savings & investments']);add('th',['Item','Monthly','Total to date']);
  sl.forEach((x,i)=>{if(S['sm'+i]||S['st'+i])add('row',[x,n('sm'+i),n('st'+i)],[1,2])});
  add('tot',['Total savings & investments',O.sm,O.st],[1,2]);
- add('sub',['Insurance premiums']);add('th',['Item','Monthly premium','Life / TPD cover','Critical illness cover','Accidental cover','Investment / savings']);
- for(let i=0;i<7;i++)if(['pm','plf','pci','pac','psv'].some(p=>S[p+i]))add('row',['Policy / certificate '+(i+1),n('pm'+i),n('plf'+i),n('pci'+i),n('pac'+i),n('psv'+i)],[1,2,3,4,5]);
- add('tot',['Total insurance premiums / cover (all policies)',O.pm,O.pt_life,O.pt_ci,O.pt_pa,O.pt_sv],[1,2,3,4,5]);add('row',['Total insurance premiums (yearly)',O.pm*12],[1]);
+ add('sub',['Insurance premiums']);const cvo=S.cv_off!=='1';add('th',['Item','Monthly premium','Life / TPD cover','Critical illness cover','Accidental cover',...(cvo?['Cash value']:[])]);
+ for(let i=0;i<7;i++)if((cvo?['pm','plf','pci','pac','psv']:['pm','plf','pci','pac']).some(p=>S[p+i]))add('row',['Policy / certificate '+(i+1),n('pm'+i),n('plf'+i),n('pci'+i),n('pac'+i),...(cvo?[n('psv'+i)]:[])],[1,2,3,4,5]);
+ add('tot',['Total insurance premiums / cover (all policies)',O.pm,O.pt_life,O.pt_ci,O.pt_pa,...(cvo?[O.pt_sv]:[])],[1,2,3,4,5]);add('row',['Total insurance premiums (yearly)',O.pm*12],[1]);
  add('sub',['C.2 Debts & commitments']);add('th',['Item','Outstanding','Monthly','Remaining years','Home loan covered by MRTA/MLTA?']);
  dn.forEach((x,i)=>{if(S['o'+i]||S['mo'+i]||(i===0&&S.mrta))add('row',[x,i===6?'':n('o'+i),n('mo'+i),i===6?'':yv(i),i?'':S.mrta||''],[1,2])});
  add('tot',['Total debts / total monthly commitments & expenses',O.td,O.tm],[1,2]);
@@ -711,7 +757,7 @@ function sheetRows(incNric){
  add('row',['Rule-of-thumb requirement ('+A('lifex')+'× annual income)',O.xr],[1]);add('tot',['Life target used (higher of the two)',O.tg],[1]);
  add('blank',[]);add('sec',['E. EXISTING COVERAGE vs NEED']);add('th',['Cover','Existing sum assured','Needed','Shortfall (-) / surplus (+)','Status','Years of income covered']);
  [['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']].forEach(([k,l])=>add('row',[l,O['pt_'+k],O['cn_'+k],O['cd_'+k],fm(O['cd_'+k],'sf'),v(O['cy_'+k])],[1,2,3]));
- add('row',['Investment / savings in policies (from C.1), for reference',O.pt_sv],[1]);add('row',['Total annual premium, all policies',O.annprem],[1]);add('row',['Premium as % of annual income',v(O.pp)],[],[1]);
+ if(cvo)add('row',['Cash value of policies (from C.1), for reference',O.pt_sv],[1]);add('row',['Total annual premium, all policies',O.annprem],[1]);add('row',['Premium as % of annual income',v(O.pp)],[],[1]);
  [['life','Life / Total Permanent Disability'],['ci','Critical Illness'],['pa','Personal Accident']].forEach(([k,l])=>add('note',[l+': '+((O.em||{})[k]||'')]));
  add('blank',[]);add('sec',['F. MEDICAL COVERAGE']);
  add('row',['Insurer',S.m_name||'']);add('row',['Plan name',S.m_plan||'']);add('row',['Deductible / co-insurance',S.m_ded||'']);add('row',['Outpatient cancer / kidney annual limit',mv('m_oplim')],[1]);add('row',['Renewable up to age / premium type',S.m_renew||'']);add('row',['Annual medical premium',mv('m_prem')],[1]);
@@ -725,14 +771,16 @@ function sheetRows(incNric){
  add('row',['No claims benefit',S.m_ncb==='Y'?'Yes – '+(S.m_ncb_v||'amount not selected'):S.m_ncb==='N'?'No':'','',O.s_ncb||'']);
  add('tot',['Medical gaps (count)',O.mg]);
  add('blank',[]);add('sec',['G. RETIREMENT NEED']);
- add('row',['Planned retirement age',n('ret_age')]);add('row',['Projected retirement savings at retirement',mv('ret_sav')],[1]);
+ add('row',['Planned retirement age',n('ret_age')]);if(O.epf_hb){add('row',['EPF balance now',mv('epf_bal')],[1]);add('row',['Monthly EPF contribution (employee + employer)',O.epf_mc],[1]);add('row',['Projected EPF savings at retirement',O.epf_fv],[1]);
+  add('row',['Other projected retirement savings (PRS / other, excluding EPF)',mv('ret_sav')],[1]);add('tot',['Total projected retirement savings (EPF + other)',O.ret_tot],[1])}
+ else add('row',['Projected retirement savings at retirement',mv('ret_sav')],[1]);
  add('row',['Inflation rate (% p.a.)',n('g_infl')/100],[],[1]);add('row',['Savings return after retirement (% p.a.)',n('g_ret')/100],[],[1]);
  add('row',['Years to retirement',v(O.y1)]);add('row',['Years in retirement',v(O.y2)]);
  add('th',['Monthly spending (today’s RM)','First-year spending at retirement','Fund needed at retirement','Gap vs projected savings','Status','Funded (%)']);
  for(let i=0;i<10;i++)if(O['ra'+i]!=='')add('row',[n('rs'+i),O['ra'+i],O['rc'+i],O['rg'+i],O['rs_'+i],v(O['rf'+i])],[0,1,2,3],[5]);
  add('blank',[]);add('sec',['H. ESTATE PLANNING (WILL / TRUST)']);
  add('row',['Will done?',S.will||'',O.s_will||'']);add('row',['Will: year made / drawn up by',S.will_d||'']);add('row',['Trust done?',S.trust||'',O.s_trust||'']);add('row',['Trust: type / year / trustee',S.trust_d||'']);add('tot',['Estate planning summary',O.es||'']);
- add('blank',[]);add('note',['This analysis is based on the information provided and the assumptions shown. It illustrates the protection position to support planning and is not a guarantee or an offer of any product.']);
+ add('blank',[]);add('note',['This analysis is based on the information provided and the assumptions shown. It illustrates the protection position to support planning and is not a guarantee or an offer of any product.']);add('note',['Income tax and EPF figures are estimates only, based on the rates and assumptions stated; they are not a tax filing or an EPF statement.']);
  return R}
 gv('gt').onclick=async()=>{
  if(!okUrl(G.url)||!G.key){msg('Enter the web app URL (ending /exec) and the secret key first.',1);return}
